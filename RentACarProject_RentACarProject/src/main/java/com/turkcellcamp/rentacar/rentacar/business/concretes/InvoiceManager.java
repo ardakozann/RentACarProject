@@ -48,7 +48,7 @@ public class InvoiceManager implements InvoiceService {
 		checkIfCreateDateAfterReturnDate(createInvoiceRequest.getCreateDate(), createInvoiceRequest.getRentalCarId());
 		checkIfExistCustomer(createInvoiceRequest.getUserId());
 		checkIfExistRentalCar(createInvoiceRequest.getRentalCarId());
-		
+		//aynı rentalCar ın bir daha faturası eklenmemeli
 		
 		Invoice invoice = this.modelMapperService.forRequest().map(createInvoiceRequest, Invoice.class);
 

@@ -49,9 +49,12 @@ public class Car {
 	@OneToMany(mappedBy = "car")
 	private List<CarMaintenance> carMaintenance;
 	
-	@OneToMany(mappedBy = "car",cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "car")
 	private List<RentalCar> rentalCar;
 	
 	@Column(name="odometer")
 	private long odometer;
+	
+	@OneToMany(mappedBy = "car")
+	private List<CarAccident> carAccidents;
 }
