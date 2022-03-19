@@ -1,14 +1,11 @@
 package com.turkcellcamp.rentacar.rentacar.entities.concretes;
 
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -28,11 +25,20 @@ public class Payment {
 	@Column(name="payment_id")
 	private int paymentId;
 	
-	@ManyToOne
-	@JoinColumn(name="credit_card_id")
-	private CreditCard creditCard;
-	
 	@OneToOne
 	@JoinColumn(name="invoice_id")
 	private Invoice invoice;
+	
+	@OneToOne
+	@JoinColumn(name="ordered_additional_service_id")
+	private OrderedAdditionalService orderedAdditionalService;
+	
+	@Column(name="card_owner_name")
+	private String cardOwnerName;
+	
+	@Column(name="card_number")
+	private String cardNumber;
+	
+	@Column(name="card_cvv_number")
+	private int cardCvvNumber;
 }

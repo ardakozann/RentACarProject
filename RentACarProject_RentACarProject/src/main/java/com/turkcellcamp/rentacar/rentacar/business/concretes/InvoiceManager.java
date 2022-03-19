@@ -45,7 +45,7 @@ public class InvoiceManager implements InvoiceService {
 	public Result add(CreateInvoiceRequest createInvoiceRequest) {
 		
 		checkIfNotExistInvoiceByInvoiceNo(createInvoiceRequest.getInvoiceNo());
-		checkIfCreateDateAfterReturnDate(createInvoiceRequest.getCreateDate(), createInvoiceRequest.getRentalCarId());
+		//checkIfCreateDateAfterReturnDate(createInvoiceRequest.getCreateDate(), createInvoiceRequest.getRentalCarId());
 		checkIfExistCustomer(createInvoiceRequest.getUserId());
 		checkIfExistRentalCar(createInvoiceRequest.getRentalCarId());
 		//aynı rentalCar ın bir daha faturası eklenmemeli
@@ -158,7 +158,7 @@ public class InvoiceManager implements InvoiceService {
 	
 	private boolean checkIfCreateDateAfterReturnDate(LocalDate createDate, int rentalCarId) {
 		LocalDate returnDate = this.rentalCarService.getRentalCarById(rentalCarId).getData().getReturnDate();
-		if(createDate.isAfter(returnDate) && createDate.isEqual(returnDate)) {
+		if(returnDate.isAfter(createDate) && returnDate.isEqual(createDate)) {
 			return true;
 		}
 		throw new BusinessException("Invoice create date can not be before rent return date");

@@ -1,5 +1,8 @@
 package com.turkcellcamp.rentacar.rentacar.business.abstracts;
 
-public interface PaymentService {
+import com.turkcellcamp.rentacar.rentacar.business.requests.paymentRequests.CreatePaymentRequest;
+import com.turkcellcamp.rentacar.rentacar.core.utilities.results.Result;
 
+public interface PaymentService {
+	public Result add(CreatePaymentRequest createPaymentRequest);
 }
