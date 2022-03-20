@@ -40,7 +40,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 	public Result add(CreateCorporateCustomerRequest createCorporateCustomerRequest) throws BusinessException {
 		
 		checkIfNotExistByEmail(createCorporateCustomerRequest.getEmail());
-		checkIfNotExistByTaxNumber(createCorporateCustomerRequest.getTaxNumber());
+		checkIfExistByTaxNumber(createCorporateCustomerRequest.getTaxNumber());
 		
 		CorporateCustomer corporateCustomer = this.modelMapperService.forRequest().map(createCorporateCustomerRequest, CorporateCustomer.class);
 		this.corporateCustomerDao.save(corporateCustomer);
@@ -52,10 +52,10 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 	public Result update(UpdateCorporateCustomerRequest updateCorporateCustomerRequest) throws BusinessException {
 		
 		checkIfNotExistByEmail(updateCorporateCustomerRequest.getEmail());
-		checkIfNotExistByTaxNumber(updateCorporateCustomerRequest.getTaxNumber());
+		checkIfExistByTaxNumber(updateCorporateCustomerRequest.getTaxNumber());
 		
 		CorporateCustomer corporateCustomer = this.modelMapperService.forRequest().map(updateCorporateCustomerRequest, CorporateCustomer.class);
-		corporateCustomer.setUserId(this.corporateCustomerDao.getByEmail(updateCorporateCustomerRequest.getEmail()).getUserId());
+		corporateCustomer.setUserId(this.corporateCustomerDao.getByTaxNumber(updateCorporateCustomerRequest.getTaxNumber()).getUserId());
 		
 		this.corporateCustomerDao.save(corporateCustomer);
 		
@@ -95,10 +95,10 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 		return true;
 	}
 	
-	private boolean checkIfNotExistByTaxNumber(String taxNumber) {
+	private boolean checkIfExistByTaxNumber(String taxNumber) {
 		var result = this.corporateCustomerDao.getByTaxNumber(taxNumber);
-		if(result != null) {
-			throw new BusinessException("Tax Number already exist.");
+		if(result == null) {
+			throw new BusinessException("Can not find Corporate Customer with this tax number.");
 		}
 		return true;
 	}
@@ -106,7 +106,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 	private boolean checkIfExistByEmail(String email) {
 		var result = this.corporateCustomerDao.getByEmail(email);
 		if(result == null) {
-			throw new BusinessException("Can not find Corporate Customer with this id.");
+			throw new BusinessException("Can not find Corporate Customer with this e-mail.");
 		}
 		return true;
 	}

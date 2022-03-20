@@ -33,45 +33,62 @@ public class ColorManager implements ColorService {
 
 	@Override
 	public Result add(CreateColorRequest createColorRequest) throws BusinessException {
+		
 		checkIfNotExistByColorName(createColorRequest.getColorName());
+		
 		Color color = this.modelMapperService.forRequest().map(createColorRequest, Color.class);
+		
 		this.colorDao.save(color);
+		
 		return new SuccessResult("Color.Added");	
 	}
 	
 	@Override
 	public Result update(UpdateColorRequest updateColorRequest) throws BusinessException {
+		
 		checkIfExistByColorId(updateColorRequest.getColorId());
 		checkIfNotExistByColorName(updateColorRequest.getColorName());
+		
 		Color color = this.modelMapperService.forRequest().map(updateColorRequest, Color.class);
+		
 		this.colorDao.save(color);
+		
 		return new SuccessResult("Color.Updated");
 	}
 	
 	@Override
 	public Result delete(DeleteColorRequest deleteColorRequest) throws BusinessException {
+		
 		checkIfExistByColorId(deleteColorRequest.getColorId());
+		
 		this.colorDao.deleteById(deleteColorRequest.getColorId());
+		
 		return new SuccessResult("Color.Deleted");	
 	}
 	
 	@Override
 	public DataResult <GetColorByIdDto> getById(int colorId) throws BusinessException {
+		
 		checkIfExistByColorId(colorId);
+		
 		GetColorByIdDto response = this.modelMapperService.forDto().map(this.colorDao.getByColorId(colorId), GetColorByIdDto.class);
+		
 		return new SuccessDataResult<GetColorByIdDto>(response);
 	}
 	
 	@Override
 	public DataResult <List<ListColorDto>> getAll() {
+		
 		var result = this.colorDao.findAll();
 		List<ListColorDto> response = result.stream().map(color->this.modelMapperService.forDto()
 				.map(color, ListColorDto.class)).collect(Collectors.toList());
+		
 		return new SuccessDataResult<List<ListColorDto>>(response);
 	}
 	
 	
 	private boolean checkIfNotExistByColorName(String colorName) throws BusinessException {
+		
 		Color color = this.colorDao.getByColorName(colorName);
 		if(color != null) {
 			throw new BusinessException("The Color you wrote is exist.");
@@ -82,6 +99,7 @@ public class ColorManager implements ColorService {
 	}
 	
 	public boolean checkIfExistByColorId(int colorId) throws BusinessException {
+		
 		Color color = this.colorDao.getByColorId(colorId);
 		if(color == null) {
 			throw new BusinessException("Can not find color with this id.");

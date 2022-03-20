@@ -32,41 +32,58 @@ public class BrandManager implements BrandService {
 
 	@Override
 	public Result add(CreateBrandRequest createBrandRequest) throws BusinessException {
+		
 		checkIfNotExistByBrandName(createBrandRequest.getBrandName());
+		
 		Brand brand = this.modelMapperService.forRequest().map(createBrandRequest, Brand.class);
+		
 		this.brandDao.save(brand);
+		
 		return new SuccessResult("Brand.Added");
 	}
 	
 	@Override
 	public Result update(UpdateBrandRequest updateBrandRequest) throws BusinessException {
+		
 		checkIfExistByBrandId(updateBrandRequest.getBrandId());
 		checkIfNotExistByBrandName(updateBrandRequest.getBrandName());
+		
 		Brand brand = this.modelMapperService.forRequest().map(updateBrandRequest, Brand.class);
+		
 		this.brandDao.save(brand);
+		
 		return new SuccessResult("Brand.Updated");
 	}
 	
 	@Override
 	public Result delete(DeleteBrandRequest deleteBrandRequest) throws BusinessException {
+		
 		checkIfExistByBrandId(deleteBrandRequest.getBrandId());
+		
 		this.brandDao.deleteById(deleteBrandRequest.getBrandId());
+		
 		return new SuccessResult("Brand.Deleted");
 	}
 	
 	@Override
 	public DataResult <List<ListBrandDto>> getAll() {
+		
 		var result = this.brandDao.findAll();
+		
 		List<ListBrandDto> response = result.stream().map(brand->this.modelMapperService.forDto()
 				.map(brand, ListBrandDto.class)).collect(Collectors.toList());
+		
 		return new SuccessDataResult <List<ListBrandDto>>(response);
 	}
 		
 	@Override
 	public DataResult <GetBrandByIdDto> getById(int brandId) throws BusinessException {
+		
 		checkIfExistByBrandId(brandId);
+		
 		Brand result = this.brandDao.getByBrandId(brandId);
 		GetBrandByIdDto response = this.modelMapperService.forDto().map(result, GetBrandByIdDto.class);
+		
 		return new SuccessDataResult<GetBrandByIdDto>(response);
 	}
 	
@@ -81,11 +98,9 @@ public class BrandManager implements BrandService {
 		}
 	}
 	
-	public boolean checkIfExistByBrandId(int brandId) throws BusinessException {//errorDataResult null olanını gönder buraya
+	public boolean checkIfExistByBrandId(int brandId) throws BusinessException {
 		if(this.brandDao.getByBrandId(brandId) == null) {
 			throw new BusinessException("Can not brand with this id.");
-			//return new ErrorDataResult<getBrandDto>(); bu defensive programming
-			//defensive programminge çevir kodları
 		}else {
 			return true;
 		}

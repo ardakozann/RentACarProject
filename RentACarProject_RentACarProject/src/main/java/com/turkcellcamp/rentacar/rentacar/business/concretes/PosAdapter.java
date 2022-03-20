@@ -9,6 +9,7 @@ import com.turkcellcamp.rentacar.rentacar.business.abstracts.FakeIsBankPosServic
 import com.turkcellcamp.rentacar.rentacar.business.abstracts.PaymentService;
 import com.turkcellcamp.rentacar.rentacar.business.abstracts.PosService;
 import com.turkcellcamp.rentacar.rentacar.business.requests.paymentRequests.CreatePaymentRequest;
+import com.turkcellcamp.rentacar.rentacar.core.exceptions.BusinessException;
 
 @Service
 public class PosAdapter implements PosService {
@@ -37,6 +38,9 @@ public class PosAdapter implements PosService {
 		else if (last4digits.equals("5003")) {
 			fakeIsBankPosService.fakeIsBankService(createPaymentRequest.getCardOwnerName(),
 					createPaymentRequest.getCardNumber(), createPaymentRequest.getCardCvvNumber());
+		}
+		else {
+			throw new BusinessException("Can not find bank pos system to pay.");
 		}
 	}
 

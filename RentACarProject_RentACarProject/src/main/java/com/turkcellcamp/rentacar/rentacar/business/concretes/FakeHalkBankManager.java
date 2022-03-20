@@ -10,14 +10,6 @@ public class FakeHalkBankManager implements FakeHalkBankPosService {
 
 	@Override
 	public void fakeHalkBankService(int Cvv, String fullName, String cardNo) {
-		
-		if(fullName.equals("Arda")) {
-			System.out.println("Halk bankası ile ödeme gerçekleşti.");
-
-		}
-		else {
-		throw new BusinessException("hatalı ödeme ");
-		}
+		System.out.println("Halk bankası ile ödeme gerçekleşti.");
 	}
-
 }

@@ -34,7 +34,7 @@ public class PaymentManager implements PaymentService {
 	
 		
 		
-		this.posService.payment(createPaymentRequest);
+		toSendPosService(createPaymentRequest);
 	
 		Payment payment = this.modelMapperService.forRequest().map(createPaymentRequest, Payment.class);
 		
@@ -42,6 +42,10 @@ public class PaymentManager implements PaymentService {
 		
 		return new SuccessResult("Ödeme başarılı..");
 		
+	}
+	
+	private void toSendPosService(CreatePaymentRequest createPaymentRequest) {
+		this.posService.payment(createPaymentRequest);
 	}
 
 }
