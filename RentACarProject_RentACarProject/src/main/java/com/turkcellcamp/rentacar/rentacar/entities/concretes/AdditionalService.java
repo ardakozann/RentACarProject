@@ -33,5 +33,5 @@ public class AdditionalService {
 		
 	@OneToMany(mappedBy="additionalService")
 	private List<OrderedAdditionalService> orderedAdditionalServices;
-		
+		//burayya pos service yani payment eklenecek 
 }

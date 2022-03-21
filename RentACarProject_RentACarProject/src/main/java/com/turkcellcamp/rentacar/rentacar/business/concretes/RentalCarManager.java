@@ -65,7 +65,8 @@ public class RentalCarManager implements RentalCarService {
 		checkIfCarNotInRent(createRentalCarRequest.getCarId());
 		checkIfCityIdCorrect(createRentalCarRequest.getRentCityId());
 		checkIfCityIdCorrect(createRentalCarRequest.getReturnCityId());
-		checkIfReturnDateAfterRentDate(createRentalCarRequest.getRentDate(), createRentalCarRequest.getReturnDate());
+		checkIfReturnDateAfterRentDate(createRentalCarRequest.getRentDate(), createRentalCarRequest.getPlannedReturnDate());
+		
 		
 		RentalCar rentalCar = this.modelMapperService.forRequest().map(createRentalCarRequest, RentalCar.class);
 		rentalCar.setCustomer(this.customerService.getByUserId(createRentalCarRequest.getUserId()));
@@ -83,6 +84,7 @@ public class RentalCarManager implements RentalCarService {
 		
 		checkIfExistById(updateRentalCarRequest.getRentalCarId());
 		checkIfCityIdCorrect(updateRentalCarRequest.getReturnCityId());
+		//return date plannedreturndate den sonra olacak. iş koşulu
 		
 		RentalCar rentalCar = toUpdate(updateRentalCarRequest);
 		
@@ -147,7 +149,7 @@ public class RentalCarManager implements RentalCarService {
 	
 	
 	private double totalPriceCalculate(RentalCar rentalCar) {
-		
+		//RETURN DATELERİ PLANNED RETURN DATE ÇEVİR
 		long daysBetween = ChronoUnit.DAYS.between(rentalCar.getRentDate(), rentalCar.getReturnDate());
 		double totalPrice = daysBetween*this.carService.getById(rentalCar.getCar().getCarId()).getData().getDailyPrice();
 		

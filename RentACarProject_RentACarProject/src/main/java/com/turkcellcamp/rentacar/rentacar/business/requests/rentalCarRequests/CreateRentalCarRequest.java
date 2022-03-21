@@ -20,10 +20,6 @@ public class CreateRentalCarRequest {
 	private LocalDate rentDate;
 	
 	@NotNull
-	@FutureOrPresent
-	private LocalDate returnDate;
-	
-	@NotNull
 	@Positive
 	private int carId;
 	
@@ -38,4 +34,8 @@ public class CreateRentalCarRequest {
 	@NotNull
 	@Positive
 	private int returnCityId;
+	
+	@NotNull
+	@FutureOrPresent
+	private LocalDate plannedReturnDate;
 }

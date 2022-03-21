@@ -6,7 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -16,22 +16,25 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="payments")
+@Table(name="cards")
 @Entity
-public class Payment {
-
+public class Card {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="payment_id")
-	private int paymentId;
+	@Column(name="card_id")
+	private int cardId;
 	
-	@OneToOne
-	@JoinColumn(name="invoice_id")
-	private Invoice invoice;
+	@Column(name="card_owner_name")
+	private String cardOwnerName;
 	
-	@OneToOne
-	@JoinColumn(name="ordered_additional_service_id")
-	private OrderedAdditionalService orderedAdditionalService;
+	@Column(name="card_number")
+	private String cardNumber;
 	
-
+	@Column(name="card_cvv_number")
+	private int cardCvvNumber;
+	
+	@ManyToOne
+	@JoinColumn(name="user_id")
+	private Customer customer;
 }

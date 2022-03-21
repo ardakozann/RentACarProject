@@ -1,7 +1,6 @@
 package com.turkcellcamp.rentacar.rentacar.business.dtos.rentalCarDtos;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,4 +19,5 @@ public class GetRentalCarByCarIdDto {
 	private double totalDailyPrice;
 	private long rentOdometer;
 	private long returnOdometer;
+	private LocalDate plannedReturnDate;
 }

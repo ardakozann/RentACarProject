@@ -45,7 +45,7 @@ public class PaymentManager implements PaymentService {
 	}
 	
 	private void toSendPosService(CreatePaymentRequest createPaymentRequest) {
-		this.posService.payment(createPaymentRequest);
+		this.posService.payments(createPaymentRequest.getCardOwnerName(), createPaymentRequest.getCardNumber(), createPaymentRequest.getCardCvvNumber());
 	}
 
 }

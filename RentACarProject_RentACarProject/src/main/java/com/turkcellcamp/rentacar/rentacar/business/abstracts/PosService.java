@@ -5,5 +5,5 @@ import com.turkcellcamp.rentacar.rentacar.business.requests.paymentRequests.Crea
 public interface PosService {
 //	public void fakeIsBankService(String fullName, String cardNo, int Cvv);
 //	public void fakeHalkBankService(int Cvv, String fullName, String cardNo);
-	public void payment(CreatePaymentRequest createPaymentRequest);
+	public boolean payments(String cardOwnerName, String cardNumber, int cardCvvNumber);
 }

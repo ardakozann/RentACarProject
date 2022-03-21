@@ -19,10 +19,6 @@ public class CreateInvoiceRequest {
 	@Positive
 	private long invoiceNo;
 	
-	@FutureOrPresent
-	@NotNull
-	private LocalDate createDate;
-	
 	@Positive
 	@NotNull
 	private int userId;

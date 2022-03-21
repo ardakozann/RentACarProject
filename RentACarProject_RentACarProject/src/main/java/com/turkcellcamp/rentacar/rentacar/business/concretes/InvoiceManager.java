@@ -45,14 +45,18 @@ public class InvoiceManager implements InvoiceService {
 	public Result add(CreateInvoiceRequest createInvoiceRequest) {
 		
 		checkIfNotExistInvoiceByInvoiceNo(createInvoiceRequest.getInvoiceNo());
-		checkIfCreateDateAfterReturnDate(createInvoiceRequest.getCreateDate(), createInvoiceRequest.getRentalCarId());
+		//checkIfCreateDateAfterReturnDate(createInvoiceRequest.getCreateDate(), createInvoiceRequest.getRentalCarId());
 		checkIfExistCustomer(createInvoiceRequest.getUserId());
 		checkIfExistRentalCar(createInvoiceRequest.getRentalCarId());
 		checkIfExistForRentalCar(createInvoiceRequest.getRentalCarId());
+		//bir iş kuralı koyacağız. Bu iş kuralı o rentalCarId deki önceden fatura oluşturup oluşturulmadığına bakacak.
+		
 		
 		Invoice invoice = this.modelMapperService.forRequest().map(createInvoiceRequest, Invoice.class);
 
 		invoice = toSetForAddMethod(invoice, createInvoiceRequest.getRentalCarId(), createInvoiceRequest.getUserId());
+		invoice = toSetCreateDateFromRentDate(invoice);
+		invoice = checkIfToSetAdditionalCreateInvoice(invoice);
 		
 		this.invoiceDao.save(invoice);
 		
@@ -188,11 +192,26 @@ public class InvoiceManager implements InvoiceService {
 	}
 	
 	private boolean checkIfExistForRentalCar(int rentalCarId) {
-		var result = this.invoiceDao.getByRentalCarId(rentalCarId);
+		var result = this.invoiceDao.getByRentalCar_RentalCarId(rentalCarId);
 		if(result != null) {
 			throw new BusinessException("Invioce already exist for this rent.(rent id: " + rentalCarId + ")");
 		}
 		return true;
 	}
 	
+	private Invoice toSetCreateDateFromRentDate(Invoice invoice) {
+		invoice.setCreateDate(invoice.getRentalCar().getRentDate());
+		return invoice;
+	}
+	//return date ve planned return date kontrol et
+	private Invoice checkIfToSetAdditionalCreateInvoice(Invoice invoice) {
+		if(this.rentalCarService.getRentalCarById(invoice.getRentalCar().getRentalCarId()).getData().getPlannedReturnDate().isEqual(
+				this.rentalCarService.getRentalCarById(invoice.getRentalCar().getRentalCarId()).getData().getReturnDate())) {
+			return invoice;
+		}
+		else {
+			invoice.setCreateDate(invoice.getRentalCar().getReturnDate());
+			return invoice;
+		}
+	}
 }
