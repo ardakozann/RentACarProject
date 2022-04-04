@@ -11,4 +11,3 @@ public class GetAdditionalServiceByIdDto {
 	private int additionalServiceId;
 	private String additionalServiceName;
 }
-

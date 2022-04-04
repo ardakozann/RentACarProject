@@ -4,12 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.turkcellcamp.rentacar.rentacar.business.abstracts.UserService;
+import com.turkcellcamp.rentacar.rentacar.business.constants.messages.BusinessMessage;
 import com.turkcellcamp.rentacar.rentacar.core.exceptions.BusinessException;
 import com.turkcellcamp.rentacar.rentacar.dataaccess.abstracts.UserDao;
 @Service
 public class UserManager implements UserService {
 
-	UserDao userDao;
+	private UserDao userDao;
 	
 	@Autowired
 	public UserManager(UserDao userDao) {
@@ -22,7 +23,7 @@ public class UserManager implements UserService {
 		var result = this.userDao.getByEmail(email);
 		
 		if(result != null) {
-			throw new BusinessException("E-mail already exist.");
+			throw new BusinessException(BusinessMessage.USERSERVICE_CHECKIFNOTEXISTBYEMAIL_ERROR);
 		}
 		return true;
 	}

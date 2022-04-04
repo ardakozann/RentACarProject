@@ -14,5 +14,5 @@ public interface InvoiceDao extends JpaRepository<Invoice, Integer>{
 	List<Invoice> getByCustomer_UserId(int id);
 	List<Invoice> findByCreateDateBetween(LocalDate startDate, LocalDate finishDate);
 	Invoice getByInvoiceNo(long invoiceNo);
-	Invoice getByRentalCar_RentalCarId(int rentalCarId);
+	List<Invoice> getByRentalCar_RentalCarId(int rentalCarId);
 }

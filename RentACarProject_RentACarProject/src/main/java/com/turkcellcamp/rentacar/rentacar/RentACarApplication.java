@@ -24,28 +24,30 @@ public class RentACarApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RentACarApplication.class, args);
 	}
-	
+
 	@Bean
 	public ModelMapper getModelMapper() {
 		return new ModelMapper();
 	}
-	
+
 	@ExceptionHandler
-	@ResponseStatus(code=HttpStatus.BAD_REQUEST)
-	public ErrorDataResult<Object> handleValidationExceptions(MethodArgumentNotValidException argumentNotValidException){
-		Map <String,String> validationErrors=new HashMap<String,String>();
-		for(FieldError fieldError : argumentNotValidException.getBindingResult().getFieldErrors()) {
+	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
+	public ErrorDataResult<Object> handleValidationExceptions(
+			MethodArgumentNotValidException argumentNotValidException) {
+		Map<String, String> validationErrors = new HashMap<String, String>();
+		for (FieldError fieldError : argumentNotValidException.getBindingResult().getFieldErrors()) {
 			validationErrors.put(fieldError.getField(), fieldError.getDefaultMessage());
 		}
-		ErrorDataResult<Object> errorDataResult = new ErrorDataResult<Object>(validationErrors,"Validation.Errors");
+		ErrorDataResult<Object> errorDataResult = new ErrorDataResult<Object>(validationErrors, "Validation.Errors");
 		return errorDataResult;
 	}
-	
+
 	@ExceptionHandler
-	@ResponseStatus(code=HttpStatus.BAD_REQUEST)
-	public ErrorDataResult<Object> handleBusinessExceptions(BusinessException businessException){
-		ErrorDataResult<Object> errorDataResult = new ErrorDataResult<Object>(businessException.getMessage(),"BusinessException error");
+	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
+	public ErrorDataResult<Object> handleBusinessExceptions(BusinessException businessException) {
+		ErrorDataResult<Object> errorDataResult = new ErrorDataResult<Object>(businessException.getMessage(),
+				"BusinessException error");
 		return errorDataResult;
 	}
-	
+
 }

@@ -11,6 +11,7 @@ import com.turkcellcamp.rentacar.rentacar.business.requests.carRequests.UpdateCa
 import com.turkcellcamp.rentacar.rentacar.core.exceptions.BusinessException;
 import com.turkcellcamp.rentacar.rentacar.core.utilities.results.DataResult;
 import com.turkcellcamp.rentacar.rentacar.core.utilities.results.Result;
+import com.turkcellcamp.rentacar.rentacar.entities.concretes.Car;
 
 public interface CarService {
 	DataResult <List<ListCarDto>> getAll();
@@ -21,6 +22,7 @@ public interface CarService {
 	DataResult <List<GetCarByDailyPriceDto>> getCarByDailyPrice(double dailyPrice);
 	DataResult <List<ListCarDto>> getAllPaged(int pageNumber, int pageSize);
 	DataResult <List<ListCarDto>> getAllSorted();
+	public Car getByIdForOtherServices(int carId);
 	boolean checkIfExistByCarId(int carId) throws BusinessException;
 	void toSetCarOdometer(int carId, long odometer);
 }

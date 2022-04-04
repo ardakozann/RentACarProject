@@ -63,7 +63,9 @@ public class RentalCar {
 	@Column(name="return_odometer")
 	private long returnOdometer;
 	
-	@OneToOne(mappedBy ="rentalCar")
-	private Invoice invoice;
+	@OneToMany(mappedBy ="rentalCar")
+	private List<Invoice> invoice;
+	
+	@Column(name="planned_return_date")
+	private LocalDate plannedReturnDate;
 }
-

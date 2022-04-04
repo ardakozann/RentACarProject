@@ -16,7 +16,7 @@ public class GetRentalCarByIdDto {
 	private int carId;
 	private int customerId;
 //	private List<String> additionalServiceName;
-	private double totalDailyPrice;
+	private double totalPrice;
 	private long rentOdometer;
 	private long returnOdometer;
 	private LocalDate plannedReturnDate;

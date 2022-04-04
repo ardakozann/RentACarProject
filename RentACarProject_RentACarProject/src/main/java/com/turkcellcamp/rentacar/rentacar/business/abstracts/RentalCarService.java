@@ -11,11 +11,12 @@ import com.turkcellcamp.rentacar.rentacar.business.requests.rentalCarRequests.Up
 import com.turkcellcamp.rentacar.rentacar.core.exceptions.BusinessException;
 import com.turkcellcamp.rentacar.rentacar.core.utilities.results.DataResult;
 import com.turkcellcamp.rentacar.rentacar.core.utilities.results.Result;
+import com.turkcellcamp.rentacar.rentacar.entities.concretes.RentalCar;
 
 public interface RentalCarService {
 
-	Result add(CreateRentalCarRequest createRentalCarRequest) throws BusinessException;
-	Result update(UpdateRentalCarRequest updateRentalCarRequest) throws BusinessException;
+	DataResult <RentalCar>add(CreateRentalCarRequest createRentalCarRequest) throws BusinessException;
+	DataResult <RentalCar>update(UpdateRentalCarRequest updateRentalCarRequest) throws BusinessException;
 	Result delete(DeleteRentalCarRequest deleteRentalCarRequest) throws BusinessException;
 	DataResult <List<ListRentalCarDto>> getAll();
 	DataResult <List<GetRentalCarByCarIdDto>> getRentalCarByCarId(int carId) throws BusinessException;
@@ -23,4 +24,5 @@ public interface RentalCarService {
 	public boolean checkIfCarNotInRent(int carId) throws BusinessException;
 	public boolean checkIfExistById(int id) throws BusinessException;
 	public void totalPriceCalculateAfterAddAdditionalService(int rentalCarId);
+	public RentalCar getByRentalCarIdForOtherServices(int rentalCarId);
 }

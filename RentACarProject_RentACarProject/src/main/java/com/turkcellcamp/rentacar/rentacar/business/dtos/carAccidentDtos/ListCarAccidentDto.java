@@ -1,7 +1,5 @@
 package com.turkcellcamp.rentacar.rentacar.business.dtos.carAccidentDtos;
 
-import com.turkcellcamp.rentacar.rentacar.business.requests.carAccidentRequests.CreateCarAccidentRequest;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

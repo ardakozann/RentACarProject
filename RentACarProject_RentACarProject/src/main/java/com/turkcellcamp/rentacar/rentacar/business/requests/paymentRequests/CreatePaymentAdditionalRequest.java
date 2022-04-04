@@ -4,7 +4,7 @@ import javax.validation.constraints.NotNull;
 
 import com.turkcellcamp.rentacar.rentacar.business.requests.invoiceRequests.CreateInvoiceRequestForTransactional;
 import com.turkcellcamp.rentacar.rentacar.business.requests.orderedAdditionalServiceRequests.CreateOrderedAdditionalServiceRequestForTransactional;
-import com.turkcellcamp.rentacar.rentacar.business.requests.rentalCarRequests.CreateRentalCarRequest;
+import com.turkcellcamp.rentacar.rentacar.business.requests.rentalCarRequests.UpdateRentalCarRequest;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,24 +13,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreatePaymentRequest {
-	
-//	@NotNull
-//	private int invoiceId;
-//	
-//	@NotNull
-//	private int orderedAdditionalServiceId;
-//	
-//	@NotNull
-//	private String cardOwnerName;
-//	
-//	@NotNull
-//	private String cardNumber;
-//	
-//	@NotNull
-//	private int cardCvvNumber;
-	
-	private CreateRentalCarRequest createRentalCarRequest;
+public class CreatePaymentAdditionalRequest {
+
+	private UpdateRentalCarRequest updateRentalCarRequest;
 	
 	private CreateOrderedAdditionalServiceRequestForTransactional createOrderedAdditionalServiceRequestForTransactional;
 	
@@ -46,6 +31,4 @@ public class CreatePaymentRequest {
 	private int cardCvvNumber;
 	
 	private boolean saveCard;
-	
-	
 }

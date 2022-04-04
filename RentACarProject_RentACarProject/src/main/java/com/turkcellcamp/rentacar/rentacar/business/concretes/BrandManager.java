@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.turkcellcamp.rentacar.rentacar.business.abstracts.BrandService;
+import com.turkcellcamp.rentacar.rentacar.business.constants.messages.BusinessMessage;
 import com.turkcellcamp.rentacar.rentacar.business.dtos.brandDtos.GetBrandByIdDto;
 import com.turkcellcamp.rentacar.rentacar.business.dtos.brandDtos.ListBrandDto;
 import com.turkcellcamp.rentacar.rentacar.business.requests.brandRequests.CreateBrandRequest;
@@ -39,7 +40,7 @@ public class BrandManager implements BrandService {
 		
 		this.brandDao.save(brand);
 		
-		return new SuccessResult("Brand.Added");
+		return new SuccessResult(BusinessMessage.BRANDSERVICE_ADD);
 	}
 	
 	@Override
@@ -52,7 +53,7 @@ public class BrandManager implements BrandService {
 		
 		this.brandDao.save(brand);
 		
-		return new SuccessResult("Brand.Updated");
+		return new SuccessResult(BusinessMessage.BRANDSERVICE_UPDATE);
 	}
 	
 	@Override
@@ -62,7 +63,7 @@ public class BrandManager implements BrandService {
 		
 		this.brandDao.deleteById(deleteBrandRequest.getBrandId());
 		
-		return new SuccessResult("Brand.Deleted");
+		return new SuccessResult(BusinessMessage.BRANDSERVICE_DELETE);
 	}
 	
 	@Override
@@ -84,14 +85,14 @@ public class BrandManager implements BrandService {
 		Brand result = this.brandDao.getByBrandId(brandId);
 		GetBrandByIdDto response = this.modelMapperService.forDto().map(result, GetBrandByIdDto.class);
 		
-		return new SuccessDataResult<GetBrandByIdDto>(response);
+		return new SuccessDataResult<GetBrandByIdDto>(response, BusinessMessage.BRANDSERVICE_GETBYID);
 	}
 	
 	
 	private boolean checkIfNotExistByBrandName(String brandName) throws BusinessException {
 		Brand brand = this.brandDao.getByBrandName(brandName);
 		if(brand != null) {
-			throw new BusinessException("The brand is exist.");
+			throw new BusinessException(BusinessMessage.BRANDSERVICE_CHECKIFEXISTBYNAME_ERROR);
 		}
 		else {
 			return true;
@@ -100,7 +101,7 @@ public class BrandManager implements BrandService {
 	
 	public boolean checkIfExistByBrandId(int brandId) throws BusinessException {
 		if(this.brandDao.getByBrandId(brandId) == null) {
-			throw new BusinessException("Can not brand with this id.");
+			throw new BusinessException(BusinessMessage.BRANDSERVICE_CHECKIFEXISTBYID_ERROR);
 		}else {
 			return true;
 		}

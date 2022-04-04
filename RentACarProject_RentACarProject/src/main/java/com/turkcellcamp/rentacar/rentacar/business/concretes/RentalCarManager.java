@@ -16,6 +16,7 @@ import com.turkcellcamp.rentacar.rentacar.business.abstracts.CityService;
 import com.turkcellcamp.rentacar.rentacar.business.abstracts.CustomerService;
 import com.turkcellcamp.rentacar.rentacar.business.abstracts.OrderedAdditionalServiceService;
 import com.turkcellcamp.rentacar.rentacar.business.abstracts.RentalCarService;
+import com.turkcellcamp.rentacar.rentacar.business.constants.messages.BusinessMessage;
 import com.turkcellcamp.rentacar.rentacar.business.dtos.rentalCarDtos.GetRentalCarByCarIdDto;
 import com.turkcellcamp.rentacar.rentacar.business.dtos.rentalCarDtos.GetRentalCarByIdDto;
 import com.turkcellcamp.rentacar.rentacar.business.dtos.rentalCarDtos.ListRentalCarDto;
@@ -58,38 +59,32 @@ public class RentalCarManager implements RentalCarService {
 	}
 
 	@Override
-	public Result add(CreateRentalCarRequest createRentalCarRequest) throws BusinessException {
+	public DataResult<RentalCar> add(CreateRentalCarRequest createRentalCarRequest) throws BusinessException {
 		
 		checkIfCarExistByCarId(createRentalCarRequest.getCarId()); 
 		checkIfCarMaintenanceNotExistByCarId(createRentalCarRequest.getCarId());
 		checkIfCarNotInRent(createRentalCarRequest.getCarId());
 		checkIfCityIdCorrect(createRentalCarRequest.getRentCityId());
 		checkIfCityIdCorrect(createRentalCarRequest.getReturnCityId());
-		checkIfReturnDateAfterRentDate(createRentalCarRequest.getRentDate(), createRentalCarRequest.getPlannedReturnDate());
+		checkIfPlannedReturnDateAfterRentDate(createRentalCarRequest.getRentDate(), createRentalCarRequest.getPlannedReturnDate());
 		
-		
-		RentalCar rentalCar = this.modelMapperService.forRequest().map(createRentalCarRequest, RentalCar.class);
-		rentalCar.setCustomer(this.customerService.getByUserId(createRentalCarRequest.getUserId()));
-		rentalCar.setTotalPrice(totalPriceCalculate(rentalCar));
-		rentalCar.setRentOdometer(getCarOdometer(rentalCar.getCar().getCarId()));
-		rentalCar.setReturnOdometer(0);
-		
+		RentalCar rentalCar = toAdd(createRentalCarRequest);	
 		
 		this.rentalCarDao.save(rentalCar);
-		return new SuccessResult("RentalCar.Added");
+		return new SuccessDataResult<RentalCar>(rentalCar, BusinessMessage.RENTALCARSERVICE_ADD);
 	}
 
 	@Override
-	public Result update(UpdateRentalCarRequest updateRentalCarRequest) throws BusinessException {
+	public DataResult<RentalCar> update(UpdateRentalCarRequest updateRentalCarRequest) throws BusinessException {
 		
 		checkIfExistById(updateRentalCarRequest.getRentalCarId());
 		checkIfCityIdCorrect(updateRentalCarRequest.getReturnCityId());
-		//return date plannedreturndate den sonra olacak. iş koşulu
+		checkIfReturnDateAfterOrPresentPlannedReturnDate(this.rentalCarDao.getByRentalCarId(updateRentalCarRequest.getRentalCarId()).getPlannedReturnDate(), updateRentalCarRequest.getReturnDate());
 		
 		RentalCar rentalCar = toUpdate(updateRentalCarRequest);
 		
 		rentalCarDao.save(rentalCar);
-		return new SuccessResult("RentalCar.Updated");
+		return new SuccessDataResult<RentalCar>(rentalCar, BusinessMessage.RENTALCARSERVICE_UPDATE);
 	}
 
 	@Override
@@ -98,7 +93,7 @@ public class RentalCarManager implements RentalCarService {
 		checkIfExistById(deleteRentalCarRequest.getRentalCarId());
 		
 		this.rentalCarDao.deleteById(deleteRentalCarRequest.getRentalCarId());
-		return new SuccessResult("RentalCar.Deleted");
+		return new SuccessResult(BusinessMessage.RENTALCARSERVICE_DELETE);
 	}
 
 	@Override
@@ -135,52 +130,94 @@ public class RentalCarManager implements RentalCarService {
 
 	public boolean checkIfExistById(int rentalCarId) throws BusinessException{
 		if(this.rentalCarDao.getByRentalCarId(rentalCarId) == null) {
-			throw new BusinessException("Can not find rental car you wrote id");
+			throw new BusinessException(BusinessMessage.RENTALCARSERVICE_CHECKIFEXISTBYID_ERROR);
 		}
 		return true;
 	}
 	
 	public boolean checkIfCarNotInRent(int carId) throws BusinessException {
 		if(this.rentalCarDao.getByReturnDateAndCar_carId(null, carId) != null) {
-			throw new BusinessException("The car in rent.");
+			throw new BusinessException(BusinessMessage.RENTALCARSERVICE_CHECKIFCARNOTINRENT_ERROR);
 		}
 		return true;
 	}
 	
 	
 	private double totalPriceCalculate(RentalCar rentalCar) {
-		//RETURN DATELERİ PLANNED RETURN DATE ÇEVİR
-		long daysBetween = ChronoUnit.DAYS.between(rentalCar.getRentDate(), rentalCar.getReturnDate());
-		double totalPrice = daysBetween*this.carService.getById(rentalCar.getCar().getCarId()).getData().getDailyPrice();
 		
+		long daysBetween = 0;
+		double rentalCarTotalPrice = rentalCar.getTotalPrice();
+		double totalPrice = 0;
 		
+		//araç fiyat hesaplama
+		if(rentalCar.getReturnDate() == null) {
+			daysBetween = ChronoUnit.DAYS.between(rentalCar.getRentDate(), rentalCar.getPlannedReturnDate());
+			rentalCarTotalPrice = 0;//eğer ilk kiralama ise rentalCarTotalPrice null olacağından dolayı 0 değerini atadım.
+						
+		}else {
+			daysBetween = ChronoUnit.DAYS.between(rentalCar.getPlannedReturnDate(), rentalCar.getReturnDate());
+		}
+		
+		totalPrice = (double) daysBetween*this.carService.getById(rentalCar.getCar().getCarId()).getData().getDailyPrice();
+		
+		//additional service fiyat hesaplama
 		if(checkIfOrderedAdditionalService(rentalCar.getRentalCarId())) {
 			
 			for(OrderedAdditionalService orderedAdditionalService : rentalCar.getOrderedAdditionalServices()) {
-				totalPrice += daysBetween*orderedAdditionalService.getAdditionalService().getAdditionalServiceDailyPrice();
+				totalPrice += (double) daysBetween*orderedAdditionalService.getAdditionalService().getAdditionalServiceDailyPrice();
 				
 			}
 		}
+		
+		//farklı şehir fiyat farkı hesaplama
 		if(!rentalCar.getRentCity().equals(rentalCar.getReturnCity())) {
 			totalPrice += 750;
 			
 		}
 		
+		//eğer planlanan tarihten sonra araç teslim edilirse eski fiyatın üzerine ekleme
+		totalPrice = totalPrice + rentalCarTotalPrice;
+		
 		return totalPrice;
 	}
 
-	public boolean checkIfReturnDateAfterRentDate(LocalDate rentDate, LocalDate returnDate) throws BusinessException {
-		if(!rentDate.isBefore(returnDate)) {
-			throw new BusinessException("Can not be return date before rent date.");
+	private boolean checkIfPlannedReturnDateAfterRentDate(LocalDate rentDate, LocalDate plannedReturnDate) throws BusinessException {
+		if(!rentDate.isBefore(plannedReturnDate)) {
+			throw new BusinessException(BusinessMessage.RENTALCARSERVICE_CHECKIFPLANNEDRETURNDATEAFTERRENTDATE_ERROR);
 		}
 		return true;
+	}
+	
+	private boolean checkIfReturnDateAfterOrPresentPlannedReturnDate(LocalDate plannedReturnDate, LocalDate returnDate) {
+		if(returnDate.isBefore(plannedReturnDate)) {
+			throw new BusinessException(BusinessMessage.RENTALCARSERVICE_CHECKIFRETURNDATEAFTERORPRESENTPLANNEDRETURNDATE_ERROR);
+		}
+		return true;
+	}
+	
+	private RentalCar toAdd(CreateRentalCarRequest createRentalCarRequest) {
+		
+		RentalCar rentalCar = new RentalCar();//this.modelMapperService.forRequest().map(createRentalCarRequest, RentalCar.class);
+		rentalCar.setRentalCarId(0);
+		rentalCar.setRentDate(createRentalCarRequest.getRentDate());
+		rentalCar.setReturnDate(null);
+		rentalCar.setCar(this.carService.getByIdForOtherServices(createRentalCarRequest.getCarId()));;
+		rentalCar.setCustomer(this.customerService.getByUserId(createRentalCarRequest.getUserId()));
+		rentalCar.setRentCity(this.cityService.getByIdForOtherService(createRentalCarRequest.getRentCityId()));
+		rentalCar.setReturnCity(this.cityService.getByIdForOtherService(createRentalCarRequest.getReturnCityId()));
+		rentalCar.setRentOdometer(getCarOdometer(rentalCar.getCar().getCarId()));
+		rentalCar.setReturnOdometer(0);
+		rentalCar.setPlannedReturnDate(createRentalCarRequest.getPlannedReturnDate());
+		rentalCar.setTotalPrice(totalPriceCalculate(rentalCar));
+		
+		return rentalCar;
 	}
 
 	private RentalCar toUpdate (UpdateRentalCarRequest updateRentalCarRequest) {
 		
 		RentalCar rentalCar = this.rentalCarDao.getByRentalCarId(updateRentalCarRequest.getRentalCarId());
 		
-		checkIfReturnDateAfterRentDate(rentalCar.getRentDate(), rentalCar.getReturnDate());
+	
 		
 		rentalCar.setReturnCity(this.cityService.getByIdForOtherService(updateRentalCarRequest.getReturnCityId()));
 		rentalCar.setReturnDate(updateRentalCarRequest.getReturnDate());
@@ -195,7 +232,7 @@ public class RentalCarManager implements RentalCarService {
 		if(cityId > 0 && cityId < 82) {
 			return true;
 		}
-		throw new BusinessException("The id you wrote is not city code.");
+		throw new BusinessException(BusinessMessage.RENTALCARSERVICE_CHECKIFCITYIDCORRECT_ERROR);
 	}
 	
 	public void totalPriceCalculateAfterAddAdditionalService(int rentalCarId) {
@@ -216,8 +253,8 @@ public class RentalCarManager implements RentalCarService {
 	}
 	
 	private void setCarOdometer(RentalCar rentalCar) {
-		if(rentalCar.getRentOdometer() > rentalCar.getRentOdometer()) {
-			throw new BusinessException("Rent odometer can not be under return odometer.");
+		if(rentalCar.getRentOdometer() > rentalCar.getReturnOdometer()) {
+			throw new BusinessException(BusinessMessage.RENTALCARSERVICE_SETCARODOMETER_ERROR);
 		}
 		this.carService.toSetCarOdometer(rentalCar.getCar().getCarId(), rentalCar.getReturnOdometer());
 	}
@@ -230,6 +267,10 @@ public class RentalCarManager implements RentalCarService {
 	private boolean checkIfCarMaintenanceNotExistByCarId(int carId) {
 		this.carMaintenanceService.checkIfCarNotInMaintenance(carId);
 		return true;
+	}
+	
+	public RentalCar getByRentalCarIdForOtherServices(int rentalCarId) {
+		return this.rentalCarDao.getByRentalCarId(rentalCarId);
 	}
 }
 

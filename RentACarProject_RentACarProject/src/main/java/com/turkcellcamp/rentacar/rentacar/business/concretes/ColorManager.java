@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.turkcellcamp.rentacar.rentacar.business.abstracts.ColorService;
+import com.turkcellcamp.rentacar.rentacar.business.constants.messages.BusinessMessage;
 import com.turkcellcamp.rentacar.rentacar.business.dtos.colorDtos.GetColorByIdDto;
 import com.turkcellcamp.rentacar.rentacar.business.dtos.colorDtos.ListColorDto;
 import com.turkcellcamp.rentacar.rentacar.business.requests.colorRequests.CreateColorRequest;
@@ -40,7 +41,7 @@ public class ColorManager implements ColorService {
 		
 		this.colorDao.save(color);
 		
-		return new SuccessResult("Color.Added");	
+		return new SuccessResult(BusinessMessage.COLORSERVICE_ADD);	
 	}
 	
 	@Override
@@ -53,7 +54,7 @@ public class ColorManager implements ColorService {
 		
 		this.colorDao.save(color);
 		
-		return new SuccessResult("Color.Updated");
+		return new SuccessResult(BusinessMessage.COLORSERVICE_UPDATE);
 	}
 	
 	@Override
@@ -63,7 +64,7 @@ public class ColorManager implements ColorService {
 		
 		this.colorDao.deleteById(deleteColorRequest.getColorId());
 		
-		return new SuccessResult("Color.Deleted");	
+		return new SuccessResult(BusinessMessage.COLORSERVICE_DELETE);	
 	}
 	
 	@Override
@@ -91,22 +92,18 @@ public class ColorManager implements ColorService {
 		
 		Color color = this.colorDao.getByColorName(colorName);
 		if(color != null) {
-			throw new BusinessException("The Color you wrote is exist.");
+			throw new BusinessException(BusinessMessage.COLORSERVICE_CHECKIFNOTEXISTBYCOLORNAME_ERROR);
 		}
-		else {
-			return true;
-		}
+		return true;
 	}
 	
 	public boolean checkIfExistByColorId(int colorId) throws BusinessException {
 		
 		Color color = this.colorDao.getByColorId(colorId);
 		if(color == null) {
-			throw new BusinessException("Can not find color with this id.");
+			throw new BusinessException(BusinessMessage.COLORSERVICE_CHECKIFEXISTBYCOLORID_ERROR);
 		}
-		else {
-			return true;
-		}
+		return true;
 	}
 
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.turkcellcamp.rentacar.rentacar.business.abstracts.IndividualCustomerService;
 import com.turkcellcamp.rentacar.rentacar.business.abstracts.UserService;
+import com.turkcellcamp.rentacar.rentacar.business.constants.messages.BusinessMessage;
 import com.turkcellcamp.rentacar.rentacar.business.dtos.individualCustomerDtos.ListIndividualCustomerDto;
 import com.turkcellcamp.rentacar.rentacar.business.requests.individualCustomerRequests.CreateIndividualCustomerRequest;
 import com.turkcellcamp.rentacar.rentacar.business.requests.individualCustomerRequests.DeleteIndividualCustomerRequest;
@@ -24,9 +25,9 @@ import com.turkcellcamp.rentacar.rentacar.entities.concretes.IndividualCustomer;
 @Service
 public class IndividualCustomerManager implements IndividualCustomerService {
 	
-	IndividualCustomerDao individualCustomerDao;
-	ModelMapperService modelMapperService;
-	UserService userService;
+	private IndividualCustomerDao individualCustomerDao;
+	private ModelMapperService modelMapperService;
+	private UserService userService;
 	
 	@Autowired
 	public IndividualCustomerManager(IndividualCustomerDao individualCustomerDao, ModelMapperService modelMapperService,
@@ -45,7 +46,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 		IndividualCustomer individualCustomer = this.modelMapperService.forRequest().map(createIndividualCustomerRequest, IndividualCustomer.class);
 		this.individualCustomerDao.save(individualCustomer);
 		
-		return new SuccessResult("IndividualCustomer.Added");
+		return new SuccessResult(BusinessMessage.INDIVIDUALCUSTOMERSERVICE_ADD);
 	}
 
 	@Override
@@ -59,7 +60,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 		
 		this.individualCustomerDao.save(individualCustomer);
 		
-		return new SuccessResult("IndividualCustomer.Update");
+		return new SuccessResult(BusinessMessage.INDIVIDUALCUSTOMERSERVICE_UPDATE);
 	}
 
 	@Override
@@ -69,7 +70,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 		
 		this.individualCustomerDao.delete(this.individualCustomerDao.getByEmail(deleteIndividualCustomerRequest.getEmail()));
 		
-		return new SuccessResult("IndividualCustomer.Deleted");
+		return new SuccessResult(BusinessMessage.INDIVIDUALCUSTOMERSERVICE_DELETE);
 	}
 
 	@Override
@@ -99,7 +100,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 	private boolean checkIfNotExistByIdentityNumber(String identityNumber) {
 		var result = this.individualCustomerDao.getByIdentityNumber(identityNumber);
 		if(result != null) {
-			throw new BusinessException("Tax Number already exist.");
+			throw new BusinessException(BusinessMessage.INDIVIDUALCUSTOMERSERVICE_CHECKIFNOTEXISTBYIDENTITYNUMBER_ERROR);
 		}
 		return true;
 	}
@@ -107,7 +108,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 	private boolean checkIfExistByEmail(String email) {
 		var result = this.individualCustomerDao.getByEmail(email);
 		if(result == null) {
-			throw new BusinessException("Can not find Corporate Customer with this id.");
+			throw new BusinessException(BusinessMessage.INDIVIDUALCUSTOMERSERVICE_CHECKIFEXISTBYEMAIL_ERROR);
 		}
 		return true;
 	}

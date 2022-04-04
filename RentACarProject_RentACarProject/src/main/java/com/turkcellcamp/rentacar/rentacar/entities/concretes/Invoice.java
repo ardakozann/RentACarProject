@@ -50,7 +50,7 @@ public class Invoice {
 	@JoinColumn(name= "customer_id")
 	private Customer customer;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name ="rental_car_id")
 	private RentalCar rentalCar;
 	

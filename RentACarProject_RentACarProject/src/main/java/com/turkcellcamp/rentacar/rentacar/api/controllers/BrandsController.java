@@ -59,4 +59,3 @@ public class BrandsController {
 		return this.brandService.getById(brandId);
 	}
 }
-

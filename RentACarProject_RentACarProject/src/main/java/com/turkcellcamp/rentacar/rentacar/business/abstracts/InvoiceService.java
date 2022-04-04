@@ -9,10 +9,11 @@ import com.turkcellcamp.rentacar.rentacar.business.requests.invoiceRequests.Crea
 import com.turkcellcamp.rentacar.rentacar.business.requests.invoiceRequests.UpdateInvoiceRequest;
 import com.turkcellcamp.rentacar.rentacar.core.utilities.results.DataResult;
 import com.turkcellcamp.rentacar.rentacar.core.utilities.results.Result;
+import com.turkcellcamp.rentacar.rentacar.entities.concretes.Invoice;
 
 public interface InvoiceService {
 	
-	Result add(CreateInvoiceRequest createInvoiceRequest);
+	DataResult<Invoice> add(CreateInvoiceRequest createInvoiceRequest);
 
 	Result update(UpdateInvoiceRequest updateInvoiceRequest);
 	

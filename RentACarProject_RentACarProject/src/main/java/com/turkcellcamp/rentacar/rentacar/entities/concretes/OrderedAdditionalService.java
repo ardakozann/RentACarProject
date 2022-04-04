@@ -34,6 +34,6 @@ public class OrderedAdditionalService {
 	@JoinColumn(name="additional_service_id")
 	private AdditionalService additionalService;
 	
-	@OneToOne(mappedBy = "orderedAdditionalService")
-	private Payment payment;
+//	@OneToOne(mappedBy = "orderedAdditionalService")
+//	private Payment payment;
 }

@@ -17,8 +17,8 @@ import com.turkcellcamp.rentacar.rentacar.entities.concretes.City;
 @Service
 public class CityManager implements CityService {
 
-	CityDao cityDao;
-	ModelMapperService modelMapperService;
+	private CityDao cityDao;
+	private ModelMapperService modelMapperService;
 	
 	@Autowired
 	public CityManager(CityDao cityDao, ModelMapperService modelMapperService) {

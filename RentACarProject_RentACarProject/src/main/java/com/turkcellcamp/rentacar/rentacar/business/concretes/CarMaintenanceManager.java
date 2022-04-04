@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.turkcellcamp.rentacar.rentacar.business.abstracts.CarMaintenanceService;
 import com.turkcellcamp.rentacar.rentacar.business.abstracts.CarService;
 import com.turkcellcamp.rentacar.rentacar.business.abstracts.RentalCarService;
+import com.turkcellcamp.rentacar.rentacar.business.constants.messages.BusinessMessage;
 import com.turkcellcamp.rentacar.rentacar.business.dtos.carMaintenanceDtos.GetCarMaintenanceByIdDto;
 import com.turkcellcamp.rentacar.rentacar.business.dtos.carMaintenanceDtos.GetCarMaintenancesInCarDto;
 import com.turkcellcamp.rentacar.rentacar.business.dtos.carMaintenanceDtos.ListCarMaintenanceDto;
@@ -55,7 +56,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 		
 		this.carMaintenanceDao.save(carMaintenance);
 		
-		return new SuccessResult("CarMaintenance.Added");
+		return new SuccessResult(BusinessMessage.CARMAINTENANCESERVICE_ADD);
 	}
 	
 	@Override
@@ -70,7 +71,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 		
 		this.carMaintenanceDao.save(carMaintenance);
 		
-		return new SuccessResult("CarMaintenance.Updated");
+		return new SuccessResult(BusinessMessage.CARMAINTENANCESERVICE_UPDATE);
 	}
 
 	@Override
@@ -80,7 +81,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 		
 		this.carMaintenanceDao.deleteById(deleteCarMaintenanceRequest.getCarMaintenanceId());
 		
-		return new SuccessResult("CarMaintenance.Deleted");
+		return new SuccessResult(BusinessMessage.CARMAINTENANCESERVICE_DELETE);
 	}
 
 	@Override
@@ -121,19 +122,19 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 		if(this.carMaintenanceDao.getByCarMaintenanceId(id) != null) {
 			return true;
 		}
-		throw new BusinessException("The car maintenance id you wrote is not exist.");
+		throw new BusinessException(BusinessMessage.CARMAINTENANCESERVICE_CHECKIFEXISTBYID_ERROR);
 	}
 	
 	public boolean checkIfCarNotInMaintenance(int carId) throws BusinessException {	
 		if(this.carMaintenanceDao.getByReturnDateAndCar_carId(null, carId) != null) {
-			throw new BusinessException("The car in maintenance.");
+			throw new BusinessException(BusinessMessage.CARMAINTENANCESERVICE_CHECKIFCARNOTINMAINTENANCE_ERROR);
 		}
 		return true;
 	}
 	
 	private boolean checkIfCarInMaintenance(int carId)throws BusinessException {
 		if(this.carMaintenanceDao.getByReturnDateAndCar_carId(null, carId) == null) {
-			throw new BusinessException("The car is not in maintenance.");
+			throw new BusinessException(BusinessMessage.CARMAINTENANCESERVICE_CHECKIFCARINMAINTENANCE_ERROR);
 		}
 		return true;	
 	}

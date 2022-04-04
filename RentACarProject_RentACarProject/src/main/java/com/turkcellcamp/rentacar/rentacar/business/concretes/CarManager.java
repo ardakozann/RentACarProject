@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.turkcellcamp.rentacar.rentacar.business.abstracts.BrandService;
 import com.turkcellcamp.rentacar.rentacar.business.abstracts.CarService;
 import com.turkcellcamp.rentacar.rentacar.business.abstracts.ColorService;
+import com.turkcellcamp.rentacar.rentacar.business.constants.messages.BusinessMessage;
 import com.turkcellcamp.rentacar.rentacar.business.dtos.carDtos.GetCarByDailyPriceDto;
 import com.turkcellcamp.rentacar.rentacar.business.dtos.carDtos.GetCarByIdDto;
 import com.turkcellcamp.rentacar.rentacar.business.dtos.carDtos.ListCarDto;
@@ -54,7 +55,7 @@ public class CarManager implements CarService{
 		
 		this.carDao.save(car);
 		
-		return new SuccessResult("Car.Added");
+		return new SuccessResult(BusinessMessage.CARSERVICE_ADD);
 	}
 
 	@Override
@@ -67,7 +68,7 @@ public class CarManager implements CarService{
 		
 		this.carDao.save(car);
 		
-		return new SuccessResult("Car.Updated");	
+		return new SuccessResult(BusinessMessage.CARSERVICE_UPDATE);	
 	}
 
 	@Override
@@ -77,7 +78,7 @@ public class CarManager implements CarService{
 		
 		this.carDao.deleteById(deleteCarRequest.getCarId());
 		
-		return new SuccessResult("Car.Deleted");
+		return new SuccessResult(BusinessMessage.CARSERVICE_DELETE);
 	}
 	
 	@Override
@@ -111,7 +112,7 @@ public class CarManager implements CarService{
 				.map(car, GetCarByDailyPriceDto.class)).collect(Collectors.toList());
 			return new SuccessDataResult<List<GetCarByDailyPriceDto>>(response);
 		}
-		return new ErrorDataResult<List<GetCarByDailyPriceDto>>("Can not find a car which is daily price you wrote is below");
+		return new ErrorDataResult<List<GetCarByDailyPriceDto>>(BusinessMessage.CARSERVICE_GETCARBYDAILYPRICE_ERROR);
 	}
 
 	@Override
@@ -138,12 +139,16 @@ public class CarManager implements CarService{
 		
 		return new SuccessDataResult<List <ListCarDto>>(response);
 	}
+	
+	public Car getByIdForOtherServices(int carId) {
+		return this.carDao.getByCarId(carId);
+	}
 
 	
 	
 	public boolean checkIfExistByCarId(int carId) throws BusinessException {
 		if(this.carDao.getByCarId(carId) == null) {
-			throw new BusinessException("The car you wrote id is not exist.");
+			throw new BusinessException(BusinessMessage.CARSERVICE_CHECKIFEXISTBYID);
 		}
 		else{
 			return true;

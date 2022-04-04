@@ -10,4 +10,5 @@ import com.turkcellcamp.rentacar.rentacar.entities.concretes.Card;
 public interface CardDao extends JpaRepository<Card, Integer> {
 	Card getByCardId(int cardId);
 	List<Card> getByCustomer_UserId(int userId);
+	Card getByCardOwnerNameAndCardNumberAndCardCvvNumber(String cardOwnderName, String cardNumber, int cardCvvNumber);
 }

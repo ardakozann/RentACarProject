@@ -4,4 +4,5 @@ import com.turkcellcamp.rentacar.rentacar.entities.concretes.Customer;
 
 public interface CustomerService  {
 	public Customer getByUserId(int id);
+	public boolean checkIfExistById(int id);
 }

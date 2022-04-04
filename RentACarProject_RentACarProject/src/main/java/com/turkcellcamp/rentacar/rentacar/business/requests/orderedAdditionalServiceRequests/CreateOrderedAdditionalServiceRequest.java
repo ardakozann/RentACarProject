@@ -20,4 +20,6 @@ public class CreateOrderedAdditionalServiceRequest {
 	@NotNull
 	private int additionalServiceId;
 	
+	
+	
 }

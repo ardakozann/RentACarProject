@@ -1,4 +1,4 @@
-package com.turkcellcamp.rentacar.rentacar.business.requests.bankRequests;
+package com.turkcellcamp.rentacar.rentacar.business.requests.invoiceRequests;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -8,18 +8,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class UpdateBankRequest {
+@AllArgsConstructor
+public class CreateInvoiceRequestForTransactional {
 	
 	@NotNull
 	@Positive
-	private int bankId;
+	private long invoiceNo;
 	
-	@NotNull
 	@Positive
-	private int bankNo;
-
 	@NotNull
-	private String bankName;
+	private int userId;
 }

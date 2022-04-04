@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.turkcellcamp.rentacar.rentacar.business.abstracts.CarAccidentService;
 import com.turkcellcamp.rentacar.rentacar.business.abstracts.CarService;
+import com.turkcellcamp.rentacar.rentacar.business.constants.messages.BusinessMessage;
 import com.turkcellcamp.rentacar.rentacar.business.dtos.carAccidentDtos.GetCarAccidentDto;
 import com.turkcellcamp.rentacar.rentacar.business.dtos.carAccidentDtos.ListCarAccidentDto;
 import com.turkcellcamp.rentacar.rentacar.business.requests.carAccidentRequests.CreateCarAccidentRequest;
@@ -46,7 +47,7 @@ public class CarAccidentManager implements CarAccidentService {
 		
 		this.carAccidentDao.save(carAccident);
 		
-		return new SuccessResult("CarAccident.Added");
+		return new SuccessResult(BusinessMessage.CARACCIDENTSERVICE_ADD);
 	}
 
 	@Override
@@ -59,7 +60,7 @@ public class CarAccidentManager implements CarAccidentService {
 		
 		this.carAccidentDao.save(carAccident);
 		
-		return new SuccessResult("CarAccident.Updated");
+		return new SuccessResult(BusinessMessage.CARACCIDENTSERVICE_UPDATE);
 	}
 
 	@Override
@@ -69,7 +70,7 @@ public class CarAccidentManager implements CarAccidentService {
 
 		this.carAccidentDao.deleteById(deleteCarAccidentRequest.getCarAccidentId());
 		
-		return new SuccessResult("CarAccident.Deleted");
+		return new SuccessResult(BusinessMessage.CARACCIDENTSERVICE_DELETE);
 	}
 
 	@Override
@@ -118,7 +119,7 @@ public class CarAccidentManager implements CarAccidentService {
 	
 	private boolean checkIfCarExistByCarId(int carId) {
 		if(this.carService.getById(carId).getData() == null) {
-			throw new BusinessException("Can not find car with this car id.");
+			throw new BusinessException(BusinessMessage.CARACCIDENTSERVICE_CHECKIFEXISTBYCARID_ERROR);
 		}
 		return true;
 	}
@@ -126,7 +127,7 @@ public class CarAccidentManager implements CarAccidentService {
 	private CarAccident checkIfCarAccidentExistByCarAccidentId(int carAccidentId) {
 		CarAccident carAccident = this.carAccidentDao.getByCarAccidentId(carAccidentId);
 		if(carAccident == null) {
-			throw new BusinessException("Can not find car accident with this car accident id.");
+			throw new BusinessException(BusinessMessage.CARACCIDENTSERVICE_CHECKIFEXISTBYID_ERROR);
 		}
 		return carAccident;
 	}

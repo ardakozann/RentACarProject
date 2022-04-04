@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.turkcellcamp.rentacar.rentacar.business.abstracts.AdditionalServiceService;
+import com.turkcellcamp.rentacar.rentacar.business.constants.messages.BusinessMessage;
 import com.turkcellcamp.rentacar.rentacar.business.dtos.additionalServiceDtos.GetAdditionalServiceByIdDto;
 import com.turkcellcamp.rentacar.rentacar.business.dtos.additionalServiceDtos.ListAdditionalServiceDto;
 import com.turkcellcamp.rentacar.rentacar.business.requests.additionalServiceRequests.CreateAdditionalServiceRequest;
@@ -41,7 +42,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 		AdditionalService additionalService = this.modelMapperService.forRequest().map(createAdditionalServiceRequest, AdditionalService.class);
 		this.additionalServiceDao.save(additionalService);
 		
-		return new SuccessResult("AdditionalService.Added");
+		return new SuccessResult(BusinessMessage.ADDITIONALSERVICE_ADD);
 	}
 
 	@Override
@@ -53,7 +54,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 		AdditionalService additionalService = this.modelMapperService.forRequest().map(updateAdditionalServiceRequest, AdditionalService.class);
 		this.additionalServiceDao.save(additionalService);
 		
-		return new SuccessResult("AdditionalService.Updated");
+		return new SuccessResult(BusinessMessage.ADDITIONALSERVICE_UPDATE);
 	}
 
 	@Override
@@ -63,7 +64,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 		
 		this.additionalServiceDao.deleteById(deleteAdditionalServiceRequest.getAdditionalServiceId());
 		
-		return new SuccessResult("AdditionalService.Deleted");
+		return new SuccessResult(BusinessMessage.ADDITIONALSERVICE_DELETE);
 	}
 
 	@Override
@@ -82,7 +83,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 		AdditionalService result = additionalServiceDao.getById(additionalServiceId);
 		GetAdditionalServiceByIdDto response = modelMapperService.forDto().map(result, GetAdditionalServiceByIdDto.class);
 		
-		return new SuccessDataResult<GetAdditionalServiceByIdDto>(response,"Success");
+		return new SuccessDataResult<GetAdditionalServiceByIdDto>(response,BusinessMessage.ADDITIONALSERVICE_GETBYID);
 	}
 	
 	
@@ -93,7 +94,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 	public boolean checkIfExistById(int additionalServiceId) throws BusinessException {
 		var result = this.additionalServiceDao.getByAdditionalServiceId(additionalServiceId);
 		if(result == null) {
-			throw new BusinessException("Can not find Additional Service you wrote id.");
+			throw new BusinessException(BusinessMessage.ADDITIONALSERVICE_CHECKIFEXISTBYID_ERROR);
 		}
 		return true;
 	}
@@ -101,7 +102,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 	private boolean checkIfNotExistByName(String name) throws BusinessException {
 		var result = this.additionalServiceDao.getByAdditionalServiceName(name);
 		if(result != null) {
-			throw new BusinessException("The additional service is exist.");
+			throw new BusinessException(BusinessMessage.ADDITIONALSERVICE_CHECKIFEXISTBYNAME_ERROR);
 		}
 		return true;
 	}
