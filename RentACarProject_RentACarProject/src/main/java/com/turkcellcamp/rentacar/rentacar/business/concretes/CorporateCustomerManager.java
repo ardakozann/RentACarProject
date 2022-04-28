@@ -76,7 +76,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 	@Override
 	public DataResult<List<ListCorporateCustomerDto>> getAll() {
 		
-		var result = this.corporateCustomerDao.findAll();
+		List<CorporateCustomer> result = this.corporateCustomerDao.findAll();
 		List<ListCorporateCustomerDto> response = result.stream().map(corporateCustomer->this.modelMapperService.forDto()
 				.map(corporateCustomer, ListCorporateCustomerDto.class)).collect(Collectors.toList());
 		setIds(result, response);
@@ -97,7 +97,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 	}
 	
 	private boolean checkIfExistByTaxNumber(String taxNumber) {
-		var result = this.corporateCustomerDao.getByTaxNumber(taxNumber);
+		CorporateCustomer result = this.corporateCustomerDao.getByTaxNumber(taxNumber);
 		if(result == null) {
 			throw new BusinessException(BusinessMessage.CORPORATECUSTOMERSERVICE_CHECKIFEXISTBYTAXNUMBER_ERROR);
 		}
@@ -105,7 +105,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 	}
 	
 	private boolean checkIfExistByEmail(String email) {
-		var result = this.corporateCustomerDao.getByEmail(email);
+		CorporateCustomer result = this.corporateCustomerDao.getByEmail(email);
 		if(result == null) {
 			throw new BusinessException(BusinessMessage.CORPORATECUSTOMERSERVICE_CHECKIFEXISTBYEMAIL_ERROR);
 		}

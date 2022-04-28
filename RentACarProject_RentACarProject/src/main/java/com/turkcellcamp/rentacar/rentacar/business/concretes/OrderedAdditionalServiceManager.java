@@ -70,7 +70,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 		checkIfExistAdditionalServiceInRent(updateOrderedAdditionalServiceRequest.getRentalCarId(),
 				updateOrderedAdditionalServiceRequest.getNewAdditionalServiceId());
 		
-		var result = this.orderedAdditionalServiceDao.getByRentalCar_rentalCarIdAndAdditionalService_additionalServiceId(updateOrderedAdditionalServiceRequest.getRentalCarId(),
+		OrderedAdditionalService result = this.orderedAdditionalServiceDao.getByRentalCar_rentalCarIdAndAdditionalService_additionalServiceId(updateOrderedAdditionalServiceRequest.getRentalCarId(),
 				updateOrderedAdditionalServiceRequest.getAdditionalServiceId());
 		OrderedAdditionalService response = this.modelMapperService.forRequest().map(result, OrderedAdditionalService.class);
 		response.setAdditionalService(this.additionalServiceService.getByIdForOtherService(updateOrderedAdditionalServiceRequest.getNewAdditionalServiceId()));
@@ -95,7 +95,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 	@Override
 	public DataResult<List<ListOrderedAdditionalServiceDto>> getAll() {
 		
-		var result = this.orderedAdditionalServiceDao.findAll();
+		List<OrderedAdditionalService> result = this.orderedAdditionalServiceDao.findAll();
 		List<ListOrderedAdditionalServiceDto> response = result.stream().map(orderedAdditionalService ->this.modelMapperService.forDto()
 				.map(orderedAdditionalService, ListOrderedAdditionalServiceDto.class)).collect(Collectors.toList());
 		response = toSetRentalCarId(response, result);
@@ -107,7 +107,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 	public DataResult<GetOrderedAdditionalServiceByIdDto> getById(int orderedAdditionalServiceId) throws BusinessException {
 		checkIfExistById(orderedAdditionalServiceId);
 		
-		var result = this.orderedAdditionalServiceDao.getByOrderedAdditionalServiceId(orderedAdditionalServiceId);
+		OrderedAdditionalService result = this.orderedAdditionalServiceDao.getByOrderedAdditionalServiceId(orderedAdditionalServiceId);
 		GetOrderedAdditionalServiceByIdDto response = this.modelMapperService.forDto().map(result, GetOrderedAdditionalServiceByIdDto.class);
 		
 		return new SuccessDataResult<GetOrderedAdditionalServiceByIdDto>(response);
@@ -117,7 +117,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 	public DataResult<List<GetOrderedAdditionalServiceByRentalCarIdDto>> getAllByRentalCarId(int rentalCarId) throws BusinessException {
 		this.rentalCarService.checkIfExistById(rentalCarId);
 		
-		var result = this.orderedAdditionalServiceDao.findOrderedAdditionalServicesByRentalCar_RentalCarId(rentalCarId);
+		List<OrderedAdditionalService> result = this.orderedAdditionalServiceDao.findOrderedAdditionalServicesByRentalCar_RentalCarId(rentalCarId);
 		List<GetOrderedAdditionalServiceByRentalCarIdDto> response = result.stream().map(orderedAdditionalService ->this.modelMapperService.forDto()
 				.map(orderedAdditionalService, GetOrderedAdditionalServiceByRentalCarIdDto.class)).collect(Collectors.toList());
 		
@@ -126,7 +126,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 
 	
 	private boolean checkIfExistAdditionalServiceInRent(int rentalCarId, int additionalServiceId) throws BusinessException {
-		var result = this.orderedAdditionalServiceDao.getByRentalCar_rentalCarIdAndAdditionalService_additionalServiceId(rentalCarId, additionalServiceId);
+		OrderedAdditionalService result = this.orderedAdditionalServiceDao.getByRentalCar_rentalCarIdAndAdditionalService_additionalServiceId(rentalCarId, additionalServiceId);
 		if(result != null) {
 			throw new BusinessException(BusinessMessage.ORDEREDADDITIONALSERVICESERVICE_CHECKIFEXISTADDITIONALSERVICEINRENT_ERROR);
 		}
@@ -134,7 +134,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 	}
 	
 	private boolean checkIfNotExistAdditionalServiceInRent(int rentalCarId, int additionalServiceId) throws BusinessException {
-		var result = this.orderedAdditionalServiceDao.getByRentalCar_rentalCarIdAndAdditionalService_additionalServiceId(rentalCarId, additionalServiceId);
+		OrderedAdditionalService result = this.orderedAdditionalServiceDao.getByRentalCar_rentalCarIdAndAdditionalService_additionalServiceId(rentalCarId, additionalServiceId);
 		if(result == null) {
 			throw new BusinessException(BusinessMessage.ORDEREDADDITIONALSERVICESERVICE_CHECKIFNOTEXISTADDITIONALSERVICEINRENT_ERROR);
 		}
@@ -142,7 +142,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 	}
 	
 	private boolean checkIfExistById(int orderedAdditionalServiceId) throws BusinessException {
-		var result = this.orderedAdditionalServiceDao.getByOrderedAdditionalServiceId(orderedAdditionalServiceId);
+		OrderedAdditionalService result = this.orderedAdditionalServiceDao.getByOrderedAdditionalServiceId(orderedAdditionalServiceId);
 		if(result == null) {
 			throw new BusinessException(BusinessMessage.ORDEREDADDITIONALSERVICESERVICE_CHECKIFEXISTBYID_ERROR);
 		}
@@ -150,7 +150,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 	}
 	
 	public boolean checkIfRentalCarId(int rentalCarId) {
-		var result = this.orderedAdditionalServiceDao.findOrderedAdditionalServicesByRentalCar_RentalCarId(rentalCarId);
+		List<OrderedAdditionalService> result = this.orderedAdditionalServiceDao.findOrderedAdditionalServicesByRentalCar_RentalCarId(rentalCarId);
 		if(result.size() != 0) {
 			return true;
 		}

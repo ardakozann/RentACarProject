@@ -28,7 +28,7 @@ public class CustomerManager implements CustomerService {
 	}
 	
 	public boolean checkIfExistById(int id) {
-		var result = this.customerDao.getByUserId(id);
+		Customer result = this.customerDao.getByUserId(id);
 		if(result == null) {
 			throw new BusinessException(BusinessMessage.CUSTOMERSERVICE_CHECKIFEXISTBYID);
 		}

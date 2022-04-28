@@ -96,7 +96,7 @@ public class CardManager implements CardService {
 		
 		checkIfExistById(cardId);
 		
-		var result = this.cardDao.getByCardId(cardId);
+		Card result = this.cardDao.getByCardId(cardId);
 		GetCardByIdDto response = this.modelMapperService.forDto().map(result, GetCardByIdDto.class);
 		
 		return new SuccessDataResult<GetCardByIdDto>(response);
@@ -123,7 +123,7 @@ public class CardManager implements CardService {
 //	}
 	
 	private boolean checkIfExistCard (Card card) {
-		var result = this.cardDao.getByCardOwnerNameAndCardNumberAndCardCvvNumber(card.getCardOwnerName(), card.getCardNumber(), card.getCardCvvNumber());
+		Card result = this.cardDao.getByCardOwnerNameAndCardNumberAndCardCvvNumber(card.getCardOwnerName(), card.getCardNumber(), card.getCardCvvNumber());
 		if (result != null) {
 			throw new BusinessException(BusinessMessage.CARDSERVICE_CHECKIFEXISTCARD_ERROR);
 		}
@@ -136,7 +136,7 @@ public class CardManager implements CardService {
 	}
 	
 	private boolean checkIfExistById(int cardId) {
-		var result = this.cardDao.getByCardId(cardId);
+		Card result = this.cardDao.getByCardId(cardId);
 		if(result == null) {
 			throw new BusinessException(BusinessMessage.CARDSERVICE_CHECKIFEXISTBYID_ERROR);
 		}

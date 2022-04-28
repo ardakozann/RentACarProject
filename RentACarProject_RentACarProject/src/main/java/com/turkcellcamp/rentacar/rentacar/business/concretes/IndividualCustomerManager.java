@@ -76,7 +76,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 	@Override
 	public DataResult<List<ListIndividualCustomerDto>> getAll() {
 		
-		var result = this.individualCustomerDao.findAll();
+		List<IndividualCustomer> result = this.individualCustomerDao.findAll();
 		List<ListIndividualCustomerDto> response = result.stream().map(individualCustomer->this.modelMapperService.forDto()
 				.map(individualCustomer, ListIndividualCustomerDto.class)).collect(Collectors.toList());
 		setIds(result, response);
@@ -98,7 +98,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 	}
 	
 	private boolean checkIfNotExistByIdentityNumber(String identityNumber) {
-		var result = this.individualCustomerDao.getByIdentityNumber(identityNumber);
+		IndividualCustomer result = this.individualCustomerDao.getByIdentityNumber(identityNumber);
 		if(result != null) {
 			throw new BusinessException(BusinessMessage.INDIVIDUALCUSTOMERSERVICE_CHECKIFNOTEXISTBYIDENTITYNUMBER_ERROR);
 		}
@@ -106,7 +106,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 	}
 	
 	private boolean checkIfExistByEmail(String email) {
-		var result = this.individualCustomerDao.getByEmail(email);
+		IndividualCustomer result = this.individualCustomerDao.getByEmail(email);
 		if(result == null) {
 			throw new BusinessException(BusinessMessage.INDIVIDUALCUSTOMERSERVICE_CHECKIFEXISTBYEMAIL_ERROR);
 		}

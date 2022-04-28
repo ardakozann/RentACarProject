@@ -99,7 +99,7 @@ public class RentalCarManager implements RentalCarService {
 	@Override
 	public DataResult<List<ListRentalCarDto>> getAll() {
 		
-		var result = this.rentalCarDao.findAll();
+		List<RentalCar> result = this.rentalCarDao.findAll();
 		List<ListRentalCarDto> response = result.stream().map(rentalCar ->this.modelMapperService.forDto()
 				.map(rentalCar, ListRentalCarDto.class)).collect(Collectors.toList());
 		return new SuccessDataResult<List<ListRentalCarDto>>(response);
@@ -110,7 +110,7 @@ public class RentalCarManager implements RentalCarService {
 		
 		checkIfCarExistByCarId(carId);
 		
-		var result = this.rentalCarDao.getByCar_carId(carId);
+		List<RentalCar> result = this.rentalCarDao.getByCar_carId(carId);
 		List<GetRentalCarByCarIdDto> response = result.stream().map(rentalCar ->this.modelMapperService.forDto()
 				.map(rentalCar, GetRentalCarByCarIdDto.class)).collect(Collectors.toList());
 		
@@ -122,7 +122,7 @@ public class RentalCarManager implements RentalCarService {
 		
 		checkIfExistById(rentalCarId);
 		
-		var result = this.rentalCarDao.getByRentalCarId(rentalCarId);
+		RentalCar result = this.rentalCarDao.getByRentalCarId(rentalCarId);
 		GetRentalCarByIdDto response = this.modelMapperService.forDto().map(result, GetRentalCarByIdDto.class);
 		
 		return new SuccessDataResult<GetRentalCarByIdDto>(response);

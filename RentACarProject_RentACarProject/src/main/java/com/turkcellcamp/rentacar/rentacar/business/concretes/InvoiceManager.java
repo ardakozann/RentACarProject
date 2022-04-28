@@ -24,6 +24,7 @@ import com.turkcellcamp.rentacar.rentacar.core.utilities.results.Result;
 import com.turkcellcamp.rentacar.rentacar.core.utilities.results.SuccessDataResult;
 import com.turkcellcamp.rentacar.rentacar.core.utilities.results.SuccessResult;
 import com.turkcellcamp.rentacar.rentacar.dataaccess.abstracts.InvoiceDao;
+import com.turkcellcamp.rentacar.rentacar.entities.concretes.Customer;
 import com.turkcellcamp.rentacar.rentacar.entities.concretes.Invoice;
 
 @Service
@@ -87,7 +88,7 @@ public class InvoiceManager implements InvoiceService {
 	@Override
 	public DataResult<List<ListInvoiceDto>> getAll() {
 		
-		var result = this.invoiceDao.findAll();
+		List<Invoice> result = this.invoiceDao.findAll();
 		List<ListInvoiceDto> response = result.stream().map(invoice -> this.modelMapperService.forDto()
 				.map(invoice,ListInvoiceDto.class)).collect(Collectors.toList());
 		response = toSetReturnDateForGetAllMethod(result, response);
@@ -100,7 +101,7 @@ public class InvoiceManager implements InvoiceService {
 		
 		checkIfExistByInvoiceId(invoiceId);
 		
-		var result = this.invoiceDao.getByInvoiceId(invoiceId);
+		Invoice result = this.invoiceDao.getByInvoiceId(invoiceId);
 		GetInvoiceByIdDto response = this.modelMapperService.forDto().map(result, GetInvoiceByIdDto.class);
 		
 		return new SuccessDataResult<GetInvoiceByIdDto>(response);
@@ -109,7 +110,7 @@ public class InvoiceManager implements InvoiceService {
 	@Override
 	public DataResult<List<ListInvoiceDto>> getByDateOfBetween(LocalDate startDate, LocalDate finishDate) {
 		
-		var result = this.invoiceDao.findByCreateDateBetween(startDate, finishDate);
+		List<Invoice> result = this.invoiceDao.findByCreateDateBetween(startDate, finishDate);
 		List<ListInvoiceDto> response = result.stream().map(invoice -> this.modelMapperService.forDto().
 				map(invoice,ListInvoiceDto.class)).collect(Collectors.toList());
 		
@@ -121,7 +122,7 @@ public class InvoiceManager implements InvoiceService {
 
 		checkIfExistCustomer(id);
 		
-		var result = this.invoiceDao.getByCustomer_UserId(id);
+		List<Invoice> result = this.invoiceDao.getByCustomer_UserId(id);
 		List<ListInvoiceDto> response = result.stream().map(invoice -> this.modelMapperService.forDto().
 				map(invoice,ListInvoiceDto.class)).collect(Collectors.toList());
 		
@@ -131,7 +132,7 @@ public class InvoiceManager implements InvoiceService {
 	
 	private Invoice toSetForAddMethod(CreateInvoiceRequest createInvoiceRequest) {
 
-		var customer = this.customerService.getByUserId(createInvoiceRequest.getUserId());
+		Customer customer = this.customerService.getByUserId(createInvoiceRequest.getUserId());
 		
 		Invoice invoice = new Invoice();
 		
@@ -171,7 +172,7 @@ public class InvoiceManager implements InvoiceService {
 	}
 	
 	private boolean checkIfNotExistInvoiceByInvoiceNo(long invoiceNo) {
-		var result = this.invoiceDao.getByInvoiceNo(invoiceNo);
+		Invoice result = this.invoiceDao.getByInvoiceNo(invoiceNo);
 		if(result != null) {
 			throw new BusinessException(BusinessMessage.INVOICESERVICE_CHECKIFNOTEXISTBYINVOICENO_ERROR);
 		}
@@ -190,7 +191,7 @@ public class InvoiceManager implements InvoiceService {
 	}
 	
 	private boolean checkIfExistByInvoiceId(int invoiceId) {
-		var result = this.invoiceDao.getByInvoiceId(invoiceId);
+		Invoice result = this.invoiceDao.getByInvoiceId(invoiceId);
 		if(result == null) {
 			throw new BusinessException(BusinessMessage.INVOICESERVICE_CHECKIFEXISTBYINVOICEID_ERROR);
 		}
@@ -198,7 +199,7 @@ public class InvoiceManager implements InvoiceService {
 	}
 	
 	private boolean checkIfInvoiceExistForRentalCar(int rentalCarId) {
-		var result = this.invoiceDao.getByRentalCar_RentalCarId(rentalCarId);
+		List<Invoice> result = this.invoiceDao.getByRentalCar_RentalCarId(rentalCarId);
 		if(result != null) {	
 			if(result.size() == 1 && this.rentalCarService.getRentalCarById(rentalCarId).getData().getReturnDate() == null ||
 					result.size() == 2 ) {

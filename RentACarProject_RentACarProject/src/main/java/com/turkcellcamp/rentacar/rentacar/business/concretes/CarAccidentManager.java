@@ -76,7 +76,7 @@ public class CarAccidentManager implements CarAccidentService {
 	@Override
 	public DataResult<List<ListCarAccidentDto>> getAll() {
 		
-		var result = this.carAccidentDao.findAll();
+		List<CarAccident> result = this.carAccidentDao.findAll();
 		
 		List<ListCarAccidentDto> response = result.stream().map(carAccident ->this.modelMapperService.forDto()
 				.map(carAccident, ListCarAccidentDto.class)).collect(Collectors.toList());
@@ -90,7 +90,7 @@ public class CarAccidentManager implements CarAccidentService {
 		
 		checkIfCarExistByCarId(carId);
 		
-		var result = this.carAccidentDao.getByCar_CarId(carId);
+		List<CarAccident> result = this.carAccidentDao.getByCar_CarId(carId);
 		
 		List<ListCarAccidentDto> response = result.stream().map(carAccident ->this.modelMapperService.forDto()
 				.map(carAccident, ListCarAccidentDto.class)).collect(Collectors.toList());
@@ -102,7 +102,7 @@ public class CarAccidentManager implements CarAccidentService {
 	@Override
 	public DataResult<GetCarAccidentDto> getCarAccidentsById(int carAccidentId) {
 
-		var result = checkIfCarAccidentExistByCarAccidentId(carAccidentId);
+		CarAccident result = checkIfCarAccidentExistByCarAccidentId(carAccidentId);
 		
 		GetCarAccidentDto response = this.modelMapperService.forDto().map(result, GetCarAccidentDto.class);
 		response.setCarId(result.getCar().getCarId());

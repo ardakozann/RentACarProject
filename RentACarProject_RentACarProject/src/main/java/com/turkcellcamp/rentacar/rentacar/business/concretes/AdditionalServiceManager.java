@@ -69,7 +69,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 
 	@Override
 	public DataResult<List<ListAdditionalServiceDto>> getAll() {
-		var result = this.additionalServiceDao.findAll();
+		List<AdditionalService> result = this.additionalServiceDao.findAll();
 		List<ListAdditionalServiceDto> response = result.stream().map(additionalService -> modelMapperService.forDto().
 				map(additionalService, ListAdditionalServiceDto.class)).collect(Collectors.toList());
 		return new SuccessDataResult<List<ListAdditionalServiceDto>>(response);
@@ -92,7 +92,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 	}
 
 	public boolean checkIfExistById(int additionalServiceId) throws BusinessException {
-		var result = this.additionalServiceDao.getByAdditionalServiceId(additionalServiceId);
+		AdditionalService result = this.additionalServiceDao.getByAdditionalServiceId(additionalServiceId);
 		if(result == null) {
 			throw new BusinessException(BusinessMessage.ADDITIONALSERVICE_CHECKIFEXISTBYID_ERROR);
 		}
@@ -100,7 +100,7 @@ public class AdditionalServiceManager implements AdditionalServiceService {
 	}
 	
 	private boolean checkIfNotExistByName(String name) throws BusinessException {
-		var result = this.additionalServiceDao.getByAdditionalServiceName(name);
+		AdditionalService result = this.additionalServiceDao.getByAdditionalServiceName(name);
 		if(result != null) {
 			throw new BusinessException(BusinessMessage.ADDITIONALSERVICE_CHECKIFEXISTBYNAME_ERROR);
 		}

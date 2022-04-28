@@ -84,7 +84,7 @@ public class CarManager implements CarService{
 	@Override
 	public DataResult <List<ListCarDto>> getAll() {
 		
-		var result = this.carDao.findAll();
+		List<Car> result = this.carDao.findAll();
 		List<ListCarDto> response = result.stream().map(car->this.modelMapperService.forDto()
 				.map(car, ListCarDto.class)).collect(Collectors.toList());
 		
@@ -96,7 +96,7 @@ public class CarManager implements CarService{
 		
 		checkIfExistByCarId(carId);
 		
-		var result = this.carDao.getByCarId(carId);
+		Car result = this.carDao.getByCarId(carId);
 		GetCarByIdDto response = this.modelMapperService.forDto().map(result, GetCarByIdDto.class);
 		
 		return new SuccessDataResult<GetCarByIdDto>(response);
@@ -105,7 +105,7 @@ public class CarManager implements CarService{
 	@Override
 	public DataResult<List<GetCarByDailyPriceDto>> getCarByDailyPrice(double dailyPrice) {
 		
-		var result = this.carDao.findByDailyPriceLessThanEqual(dailyPrice);
+		List<Car> result = this.carDao.findByDailyPriceLessThanEqual(dailyPrice);
 		
 		if(result.size() != 0) {
 			List<GetCarByDailyPriceDto> response = result.stream().map(car->this.modelMapperService.forDto()
