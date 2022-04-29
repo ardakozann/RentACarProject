@@ -51,8 +51,8 @@ public class BusinessMessage {
 	public static final String CORPORATECUSTOMERSERVICE_ADD = "CorporateCustomer.Added";
 	public static final String CORPORATECUSTOMERSERVICE_UPDATE = "CorporateCustomer.Updated";
 	public static final String CORPORATECUSTOMERSERVICE_DELETE = "CorporateCustomer.Deleted";
-	public static final String CORPORATECUSTOMERSERVICE_CHECKIFEXISTBYTAXNUMBER_ERROR = "Can not find Corporate Customer with this tax number.";
-	public static final String CORPORATECUSTOMERSERVICE_CHECKIFEXISTBYEMAIL_ERROR = "Can not find Corporate Customer with this e-mail.";
+	public static final String CORPORATECUSTOMERSERVICE_CHECKIFEXISTBYTAXNUMBER_ERROR = "The tax number already use.";
+	public static final String CORPORATECUSTOMERSERVICE_CHECKIFEXISTBYEMAIL_ERROR = "The e-mail already use.";
 	
 	public static final String CUSTOMERSERVICE_CHECKIFEXISTBYID = "Can not find Customer with this id.";
 	
