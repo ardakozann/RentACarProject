@@ -8,11 +8,12 @@ import com.turkcellcamp.rentacar.rentacar.business.constants.messages.BusinessMe
 import com.turkcellcamp.rentacar.rentacar.core.exceptions.BusinessException;
 import com.turkcellcamp.rentacar.rentacar.dataaccess.abstracts.UserDao;
 import com.turkcellcamp.rentacar.rentacar.entities.concretes.User;
+
 @Service
 public class UserManager implements UserService {
 
 	private UserDao userDao;
-	
+
 	@Autowired
 	public UserManager(UserDao userDao) {
 		this.userDao = userDao;
@@ -20,11 +21,22 @@ public class UserManager implements UserService {
 
 	@Override
 	public boolean checkIfNotExistByEmail(String email) {
+
+		User result = this.userDao.getByEmail(email);
+
+		if (result != null) {
+			throw new BusinessException(BusinessMessage.USERSERVICE_CHECKIFNOTEXISTBYEMAIL_ERROR);
+		}
+		return true;
+	}
+
+	@Override
+	public boolean checkIfExistByEmail(String email) {
 		
 		User result = this.userDao.getByEmail(email);
-		
-		if(result != null) {
-			throw new BusinessException(BusinessMessage.USERSERVICE_CHECKIFNOTEXISTBYEMAIL_ERROR);
+
+		if (result == null) {
+			throw new BusinessException(BusinessMessage.USERSERVICE_CHECKIFEXISTBYEMAIL_ERROR);
 		}
 		return true;
 	}

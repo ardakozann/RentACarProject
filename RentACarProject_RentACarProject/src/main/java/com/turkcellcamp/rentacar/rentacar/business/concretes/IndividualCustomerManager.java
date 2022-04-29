@@ -106,10 +106,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 	}
 	
 	private boolean checkIfExistByEmail(String email) {
-		IndividualCustomer result = this.individualCustomerDao.getByEmail(email);
-		if(result == null) {
-			throw new BusinessException(BusinessMessage.INDIVIDUALCUSTOMERSERVICE_CHECKIFEXISTBYEMAIL_ERROR);
-		}
+		this.userService.checkIfExistByEmail(email);
 		return true;
 	}
 }

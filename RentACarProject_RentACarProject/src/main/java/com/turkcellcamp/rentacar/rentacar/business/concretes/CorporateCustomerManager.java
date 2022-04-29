@@ -105,10 +105,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 	}
 	
 	private boolean checkIfExistByEmail(String email) {
-		CorporateCustomer result = this.corporateCustomerDao.getByEmail(email);
-		if(result != null) {
-			throw new BusinessException(BusinessMessage.CORPORATECUSTOMERSERVICE_CHECKIFEXISTBYEMAIL_ERROR);
-		}
+		this.userService.checkIfExistByEmail(email);
 		return true;
 	}
 }

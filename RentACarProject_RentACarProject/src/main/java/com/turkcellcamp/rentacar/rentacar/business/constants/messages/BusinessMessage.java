@@ -52,15 +52,13 @@ public class BusinessMessage {
 	public static final String CORPORATECUSTOMERSERVICE_UPDATE = "CorporateCustomer.Updated";
 	public static final String CORPORATECUSTOMERSERVICE_DELETE = "CorporateCustomer.Deleted";
 	public static final String CORPORATECUSTOMERSERVICE_CHECKIFEXISTBYTAXNUMBER_ERROR = "The tax number already use.";
-	public static final String CORPORATECUSTOMERSERVICE_CHECKIFEXISTBYEMAIL_ERROR = "The e-mail already use.";
 	
 	public static final String CUSTOMERSERVICE_CHECKIFEXISTBYID = "Can not find Customer with this id.";
 	
 	public static final String INDIVIDUALCUSTOMERSERVICE_ADD = "IndividualCustomer.Added";
 	public static final String INDIVIDUALCUSTOMERSERVICE_UPDATE = "IndividualCustomer.Updated";
 	public static final String INDIVIDUALCUSTOMERSERVICE_DELETE = "IndividualCustomer.Deleted";
-	public static final String INDIVIDUALCUSTOMERSERVICE_CHECKIFNOTEXISTBYIDENTITYNUMBER_ERROR = "Tax Number already exist.";
-	public static final String INDIVIDUALCUSTOMERSERVICE_CHECKIFEXISTBYEMAIL_ERROR = "Can not find Corporate Customer with this id.";
+	public static final String INDIVIDUALCUSTOMERSERVICE_CHECKIFNOTEXISTBYIDENTITYNUMBER_ERROR = "Identity already exist.";
 	
 	public static final String INVOICESERVICE_ADD = "Invoice.Added";
 	public static final String INVOICESERVICE_ADD_ERROR = "There is no need to create invoice";
@@ -91,4 +89,5 @@ public class BusinessMessage {
 	public static final String RENTALCARSERVICE_SETCARODOMETER_ERROR = "Rent odometer can not be under return odometer.";
 	
 	public static final String USERSERVICE_CHECKIFNOTEXISTBYEMAIL_ERROR = "E-mail already exist.";
+	public static final String USERSERVICE_CHECKIFEXISTBYEMAIL_ERROR = "Can not find user with this e-mail.";
 }
