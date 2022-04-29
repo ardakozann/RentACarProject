@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class DeleteCorporateCustomerRequest {
 	
 	@NotNull
-	private String email;
+	private String taxNumber;
 	
 }

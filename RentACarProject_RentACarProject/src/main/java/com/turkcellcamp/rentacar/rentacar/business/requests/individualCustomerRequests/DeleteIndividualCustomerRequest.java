@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class DeleteIndividualCustomerRequest {
 	
 	@NotNull
-	private String email;
+	private String identityNumber;
 	
 }

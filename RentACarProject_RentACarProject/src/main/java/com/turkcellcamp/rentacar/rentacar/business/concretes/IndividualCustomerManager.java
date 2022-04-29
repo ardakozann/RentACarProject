@@ -66,9 +66,9 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 	@Override
 	public Result delete(DeleteIndividualCustomerRequest deleteIndividualCustomerRequest) throws BusinessException {
 		
-		checkIfExistByEmail(deleteIndividualCustomerRequest.getEmail());
+		checkIfExistByIdentityNuber(deleteIndividualCustomerRequest.getIdentityNumber());
 		
-		this.individualCustomerDao.delete(this.individualCustomerDao.getByEmail(deleteIndividualCustomerRequest.getEmail()));
+		this.individualCustomerDao.delete(this.individualCustomerDao.getByIdentityNumber(deleteIndividualCustomerRequest.getIdentityNumber()));
 		
 		return new SuccessResult(BusinessMessage.INDIVIDUALCUSTOMERSERVICE_DELETE);
 	}
@@ -105,8 +105,11 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 		return true;
 	}
 	
-	private boolean checkIfExistByEmail(String email) {
-		this.userService.checkIfExistByEmail(email);
+	private boolean checkIfExistByIdentityNuber(String identityNumber) {
+		IndividualCustomer result = this.individualCustomerDao.getByIdentityNumber(identityNumber);
+		if(result == null) {
+			throw new BusinessException(BusinessMessage.INDIVIDUALCUSTOMERSERVICE_CHECKIFEXISTBYIDENTITYNUMBER_ERROR);
+		}
 		return true;
 	}
 }

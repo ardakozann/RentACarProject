@@ -41,7 +41,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 	public Result add(CreateCorporateCustomerRequest createCorporateCustomerRequest) throws BusinessException {
 		
 		checkIfNotExistByEmail(createCorporateCustomerRequest.getEmail());
-		checkIfExistByTaxNumber(createCorporateCustomerRequest.getTaxNumber());
+		checkIfNotExistByTaxNumber(createCorporateCustomerRequest.getTaxNumber());
 		
 		CorporateCustomer corporateCustomer = this.modelMapperService.forRequest().map(createCorporateCustomerRequest, CorporateCustomer.class);
 		this.corporateCustomerDao.save(corporateCustomer);
@@ -53,7 +53,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 	public Result update(UpdateCorporateCustomerRequest updateCorporateCustomerRequest) throws BusinessException {
 		
 		checkIfNotExistByEmail(updateCorporateCustomerRequest.getEmail());
-		checkIfExistByTaxNumber(updateCorporateCustomerRequest.getTaxNumber());
+		checkIfNotExistByTaxNumber(updateCorporateCustomerRequest.getTaxNumber());
 		
 		CorporateCustomer corporateCustomer = this.modelMapperService.forRequest().map(updateCorporateCustomerRequest, CorporateCustomer.class);
 		corporateCustomer.setUserId(this.corporateCustomerDao.getByTaxNumber(updateCorporateCustomerRequest.getTaxNumber()).getUserId());
@@ -66,9 +66,9 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 	@Override
 	public Result delete(DeleteCorporateCustomerRequest deleteCorporateCustomerRequest) throws BusinessException {
 		
-		checkIfExistByEmail(deleteCorporateCustomerRequest.getEmail());
+		checkIfExistByTaxNumber(deleteCorporateCustomerRequest.getTaxNumber());
 		
-		this.corporateCustomerDao.delete(this.corporateCustomerDao.getByEmail(deleteCorporateCustomerRequest.getEmail()));
+		this.corporateCustomerDao.delete(this.corporateCustomerDao.getByTaxNumber(deleteCorporateCustomerRequest.getTaxNumber()));
 		
 		return new SuccessResult(BusinessMessage.CORPORATECUSTOMERSERVICE_DELETE);
 	}
@@ -96,16 +96,19 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 		return true;
 	}
 	
-	private boolean checkIfExistByTaxNumber(String taxNumber) {
+	private boolean checkIfNotExistByTaxNumber(String taxNumber) {
 		CorporateCustomer result = this.corporateCustomerDao.getByTaxNumber(taxNumber);
 		if(result != null) {
-			throw new BusinessException(BusinessMessage.CORPORATECUSTOMERSERVICE_CHECKIFEXISTBYTAXNUMBER_ERROR);
+			throw new BusinessException(BusinessMessage.CORPORATECUSTOMERSERVICE_CHECKIFNOTEXISTBYTAXNUMBER_ERROR);
 		}
 		return true;
 	}
 	
-	private boolean checkIfExistByEmail(String email) {
-		this.userService.checkIfExistByEmail(email);
+	private boolean checkIfExistByTaxNumber(String taxNumber) {
+		CorporateCustomer result = this.corporateCustomerDao.getByTaxNumber(taxNumber);
+		if(result == null) {
+			throw new BusinessException(BusinessMessage.CORPORATECUSTOMERSERVICE_CHECKIFEXISTBYTAXNUMBER_ERROR);
+		}
 		return true;
 	}
 }

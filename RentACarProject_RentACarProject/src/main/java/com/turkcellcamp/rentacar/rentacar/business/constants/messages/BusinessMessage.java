@@ -51,14 +51,16 @@ public class BusinessMessage {
 	public static final String CORPORATECUSTOMERSERVICE_ADD = "CorporateCustomer.Added";
 	public static final String CORPORATECUSTOMERSERVICE_UPDATE = "CorporateCustomer.Updated";
 	public static final String CORPORATECUSTOMERSERVICE_DELETE = "CorporateCustomer.Deleted";
-	public static final String CORPORATECUSTOMERSERVICE_CHECKIFEXISTBYTAXNUMBER_ERROR = "The tax number already use.";
+	public static final String CORPORATECUSTOMERSERVICE_CHECKIFNOTEXISTBYTAXNUMBER_ERROR = "Tax number you wrote already exists.";
+	public static final String CORPORATECUSTOMERSERVICE_CHECKIFEXISTBYTAXNUMBER_ERROR = "Can not find customer with this tax number.";
 	
 	public static final String CUSTOMERSERVICE_CHECKIFEXISTBYID = "Can not find Customer with this id.";
 	
 	public static final String INDIVIDUALCUSTOMERSERVICE_ADD = "IndividualCustomer.Added";
 	public static final String INDIVIDUALCUSTOMERSERVICE_UPDATE = "IndividualCustomer.Updated";
 	public static final String INDIVIDUALCUSTOMERSERVICE_DELETE = "IndividualCustomer.Deleted";
-	public static final String INDIVIDUALCUSTOMERSERVICE_CHECKIFNOTEXISTBYIDENTITYNUMBER_ERROR = "Identity already exist.";
+	public static final String INDIVIDUALCUSTOMERSERVICE_CHECKIFNOTEXISTBYIDENTITYNUMBER_ERROR = "Identity number you wrote already exists.";
+	public static final String INDIVIDUALCUSTOMERSERVICE_CHECKIFEXISTBYIDENTITYNUMBER_ERROR = "Can not find customer with this identity number.";
 	
 	public static final String INVOICESERVICE_ADD = "Invoice.Added";
 	public static final String INVOICESERVICE_ADD_ERROR = "There is no need to create invoice";
